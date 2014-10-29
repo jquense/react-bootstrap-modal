@@ -31,7 +31,7 @@ var MyModal = React.createClass({
             <h4>Text in a modal</h4>
             <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
 
-            <ModalTrigger modal={<NestedModal />}>
+            <ModalTrigger modal={<MyModal />}>
               <button type='button'>Launch demo modal</button>
             </ModalTrigger>
 

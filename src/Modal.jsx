@@ -42,6 +42,7 @@ var Modal = React.createClass({
       , self = this
       , idx = stack.indexOf(el)
 
+    if(!stack.length) document.body.className += ' modal-open'
     if(idx === -1) stack.push(el)
     this.fixBackdrop()
 
@@ -54,8 +55,12 @@ var Modal = React.createClass({
     var idx = stack.indexOf(this.getDOMNode())
 
     if(idx !== -1) stack.splice(idx, 1)
+      
+    if(!stack.length) 
+      document.body.className = document.body.className.replace('modal-open', '')
 
     $.off(document, focusEvent, this._focus, true)
+
   },
 
   render: function() {
@@ -64,7 +69,8 @@ var Modal = React.createClass({
     
     props.ref = "modal"
 
-    return BSModal(props, this.props.children);
+    return React.DOM.div({ style: { overflowX: 'auto' }}, 
+      BSModal(props, this.props.children));
   },
 
   _focus: function(e){
