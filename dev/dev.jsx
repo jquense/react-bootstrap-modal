@@ -1,6 +1,8 @@
 // var chance = new (require('chance'))
 var React = require('react/addons')
   , Modal = require('../src/Modal.jsx')
+  , Alert = require('../src/Alert.jsx')
+  , Confirm = require('../src/Confirm.jsx')
   , ModalTrigger = require('react-bootstrap/ModalTrigger')
 
 var NestedModal = React.createClass({
@@ -68,7 +70,33 @@ var overlayTriggerInstance = (
     </ModalTrigger>
   );
 
-React.renderComponent(overlayTriggerInstance, document.body);
+var Container = React.createClass({
+  getInitialState: function(){ 
+    return { open: true }
+  },
+  render: function() {
+    var open = this.state.open
+
+    return (
+      <Confirm open={open} delay={4000} onAction={onAction.bind(this)}>
+        <h4>Attention!</h4>
+        <p>
+          very super important message for you attention
+        </p>
+      </Confirm>
+    );
+
+    function onAction(answer){
+      console.log('answer', answer)
+      this.setState({ open: false })
+    }
+  }
+
+});
+
+var Accept = <button type='button'>DO IT</button>
+
+React.renderComponent(<Container/>, document.body);
 
 
 function generateList(){

@@ -57,7 +57,6 @@
     "jstransform-loader": "~0.1.1"
   },
   "dependencies": {
-    "lodash": "~2.4.1",
     "react-bootstrap": "~0.12.0",
     "xtend": "~4.0.0",
     "react": "~0.11.2"

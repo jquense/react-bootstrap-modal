@@ -87,10 +87,6 @@ var DOM = module.exports = {
 
 }
 
-function getWindow( node ) {
-  return node === node.window
-    ? node : node.nodeType === 9 && node.defaultView;
-}
 
 function camelize(str){
   return str.replace(/-+(.)?/g, function(match, chr){ return chr ? chr.toUpperCase() : '' })
