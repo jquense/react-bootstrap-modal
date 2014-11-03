@@ -1,14 +1,12 @@
-var Layer = require('./src/Layer');
+var Layer = 
 
 module.exports = {
-  Alert:   require('./lib/Alert'),
-  Confirm: require('./lib/Confirm'),
-  Modal:   require('./lib/bsModal'),
+  Modal:          require('./lib/Modal'),
+  ModalTrigger:   require('./lib/ModalTrigger'),
 
-  DialogMixin: require('./lib/DialogMixin'),
+  Layer:          require('./lib/Layer'), 
+  Fade:           require('./lib/ModalTrigger'),
 
-  Dialogs: {
-
-  }
-
+  OverlayMixin:   require('./lib/OverlayMixin'),
+  StackableMixin: require('./lib/StackableMixin')
 }

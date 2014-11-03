@@ -1,6 +1,6 @@
 'use strict';
 
-require('../src/less/modal.less')
+require('../src/less/bbm-complete.less')
 
 var React = require('react/addons')
   , Modal = require('../src/components/Modal.jsx')
@@ -30,11 +30,17 @@ var NestedModal = React.createClass({
   }
 });
 
+function h(p){
+  return function(){console.log(p)}
+}
+
 var MyModal = React.createClass({
 
   render: function() {
     return (
-        <Modal bsSize='lg' {...this.props} title="Modal heading" animation={true} backdrop='static'>
+        <Modal bsSize='lg' {...this.props} 
+          animation
+          backdrop='static'>
           <div className="modal-body">
             <ModalTrigger modal={<NestedModal />}>
               <button type='button'>Launch nested Modal</button>
