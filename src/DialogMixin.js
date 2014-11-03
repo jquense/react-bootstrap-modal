@@ -1,6 +1,6 @@
-
+'use strict';
 var React = require('react')
-  , cloneWithProps = require('react-bootstrap/utils/cloneWithProps')
+  , cloneWithProps = require('./transferProps').cloneWithProps
 
 module.exports = {
 
@@ -20,11 +20,11 @@ module.exports = {
       , text, Button;
 
     if (typeof this.props[prop] === 'string')
-      text =  this.props[prop]
+      text = this.props[prop]
 
     Button = text ? React.DOM.button({ type: 'button' }, text) : this.props[prop]
 
-    return cloneWithProps(Button, { 
+    return cloneWithProps(Button, {
       className: classes || '',
       disabled: this.state.disabled,
       onClick: chain(handler, Button.props.onClick, this)
@@ -42,11 +42,11 @@ module.exports = {
   },
 
   componentWillMount: function() {
-    this._delay(this.props) 
+    this._delay(this.props)
   },
 
   componentWillReceiveProps: function(nextProps) {
-    this._delay(nextProps) 
+    this._delay(nextProps)
   },
 }
 

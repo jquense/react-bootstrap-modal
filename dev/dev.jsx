@@ -1,9 +1,11 @@
-// var chance = new (require('chance'))
+'use strict';
+
+require('../src/less/modal.less')
+
 var React = require('react/addons')
-  , Modal = require('../src/Modal.jsx')
-  , Alert = require('../src/Alert.jsx')
-  , Confirm = require('../src/Confirm.jsx')
-  , ModalTrigger = require('react-bootstrap/ModalTrigger')
+  , Modal = require('../src/components/Modal.jsx')
+  , ModalTrigger = require('../src/components/ModalTrigger')
+
 
 var NestedModal = React.createClass({
 
@@ -15,6 +17,10 @@ var NestedModal = React.createClass({
 
             <h4>Overflowing text to show scroll behavior</h4>
             <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+
+            <ModalTrigger modal={<MyModal />}>
+              <button type='button'>Launch Modal-ception</button>
+            </ModalTrigger>
           </div>
           <div className="modal-footer">
             <button onClick={this.props.onRequestHide}>Close</button>
@@ -27,14 +33,11 @@ var NestedModal = React.createClass({
 var MyModal = React.createClass({
 
   render: function() {
-    return this.transferPropsTo(
-        <Modal title="Modal heading" animation={true}>
+    return (
+        <Modal bsSize='lg' {...this.props} title="Modal heading" animation={true} backdrop='static'>
           <div className="modal-body">
-            <h4>Text in a modal</h4>
-            <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
-
-            <ModalTrigger modal={<MyModal />}>
-              <button type='button'>Launch demo modal</button>
+            <ModalTrigger modal={<NestedModal />}>
+              <button type='button'>Launch nested Modal</button>
             </ModalTrigger>
 
             <h4>Popover in a modal</h4>
@@ -64,61 +67,9 @@ var MyModal = React.createClass({
   }
 });
 
-var overlayTriggerInstance = (
+
+React.render((
     <ModalTrigger modal={<MyModal />}>
       <button type='button'>Launch demo modal</button>
     </ModalTrigger>
-  );
-
-var Container = React.createClass({
-  getInitialState: function(){ 
-    return { open: true }
-  },
-  render: function() {
-    var open = this.state.open
-
-    return (
-      <Confirm open={open} delay={4000} onAction={onAction.bind(this)}>
-        <h4>Attention!</h4>
-        <p>
-          very super important message for you attention
-        </p>
-      </Confirm>
-    );
-
-    function onAction(answer){
-      console.log('answer', answer)
-      this.setState({ open: false })
-    }
-  }
-
-});
-
-var Accept = <button type='button'>DO IT</button>
-
-React.renderComponent(<Container/>, document.body);
-
-
-function generateList(){
-  var arr = new Array(100)
-
-  for(var i = 0; i < arr.length; i++)
-    arr[i] = { id: i + 1, name: chance.name() }
-
-  return arr
-}
-
-function suggestList(){
-  var i = 0;
-
-  return [
-    { id: i += 1, name: "james" },
-    { id: i += 1, name: "jan" },
-    { id: i += 1, name: "jase" },
-    { id: i += 1, name: "jason" },
-    { id: i += 1, name: "jim" },
-    { id: i += 1, name: "jimmy" },
-    { id: i += 1, name: "jimmy smith" },
-    { id: i += 1, name: "john" }
-  ]
-}
+  ), document.body);

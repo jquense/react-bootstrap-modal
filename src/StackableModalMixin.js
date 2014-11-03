@@ -1,8 +1,8 @@
+'use strict';
 var $ = require('./dom')
   , baseIndex = {}
   , stack = []
   , zIndexFactor = 10;
-
 
 module.exports = {
 
@@ -17,31 +17,26 @@ module.exports = {
     var idx = stack.indexOf(this.getDOMNode())
 
     if(idx !== -1) stack.splice(idx, 1)
-    if(!stack.length) 
+      
+    if(!stack.length)
       document.body.className = document.body.className.replace(/\bmodal-open\b/, '')
   },
 
-  getZIndex: (function () {
-    var modal = document.createElement("div")
-      , backdrop = document.createElement("div");
+  // getZIndex: (function () {
+  //   var modal = document.createElement("div");
 
-    modal.className = 'modal hide'
-    backdrop.className = 'modal-backdrop hide'
+  //   modal.className = 'modal hidden'
 
-    document.body.appendChild(modal)
-    document.body.appendChild(backdrop)
+  //   document.body.appendChild(modal)
+  //   baseIndex.modal = +$.css(modal, 'z-index')
 
-    baseIndex.modal    = +$.css(modal, 'z-index')
-    baseIndex.backdrop = +$.css(backdrop, 'z-index')
-    zIndexFactor = baseIndex.modal - baseIndex.backdrop
+  //   document.body.removeChild(modal)
 
-    document.body.removeChild(modal)
-    document.body.removeChild(backdrop) 
-
-    return function (type) {
-      return baseIndex[type] + (zIndexFactor * stack.length);
-    }
-  }()),
+  //   return function (type) {
+  //     var len = stack.length === 1 ? 0 : stack.length
+  //     return baseIndex[type] + (zIndexFactor * len);
+  //   }
+  // }()),
 
   isTopModal: function isAmericasTopModal(modal){
     return !!stack.length && stack[stack.length - 1] === modal

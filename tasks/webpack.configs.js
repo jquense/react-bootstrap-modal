@@ -10,33 +10,6 @@ var path = require('path')
 
 module.exports = {
 
-  browser: {
-
-    entry: './index.js',
-
-    output: {
-      path: path.join(__dirname, "./browser"),
-      filename: 'react-listview.js',
-      library:  'ReactListview',
-      libraryTarget: 'this'
-    },
-
-    externals: {
-      'react':  'window.React'
-    },
-
-    plugins: [
-      ProdDefine,
-      
-      new webpack.BannerPlugin( 
-        "v" + JSON.stringify(pkg.version) + " | (c) " + (new Date).getFullYear() + " Jason Quense | "
-        + "https://github.com/theporchrat/react-listview/blob/master/License.txt"
-        , { entryOnly : true }),
-
-      new webpack.optimize.UglifyJsPlugin()
-    ],
-  },
-
   dev: {
 
     devtool: 'source-map',
@@ -49,7 +22,9 @@ module.exports = {
 
     module: {
       loaders: [
-        { test: /\.jsx$/,  loader: 'jsx-loader?harmony=true&insertPragma=React.DOM' }
+        { test: /\.js$|.jsx$/,  loader: 'jsx-loader?harmony=true&insertPragma=React.DOM' },
+        { test: /\.css$/, loader: "style-loader!css-loader" },
+        { test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
       ]
     },
   },

@@ -1,64 +1,49 @@
 {
-  "name": "react-listview",
+  "name": "react-boostrap-modal",
   "version": "0.3.0",
-  "description": "Data bound list with edit in place for list items",
+  "description": "Sort-of port of jschr's bootstrap-modal extension. Adds stackable, focusable, modals for tbs 3.0",
   "main": "index.js",
   "author": {
     "name": "Jason",
-    "email": "theporchrat@gmail.com"
+    "email": "monastic-panic@gmail.com"
   },
   "keywords": [
     "react",
-    "widgets",
-    "listview",
-    "list",
-    "datalist",
-    "react-ui",
+    "bootstrap",
+    "modal",
+    "dialog",
+    "stackable",
     "react-component"
   ],
-  "homepage": "http://theporchrat.github.io/react-listview",
+  "homepage": "http://jquense.github.io/react-boostrap-modals",
   "repository": {
     "type": "git",
-    "url": "https://github.com/theporchrat/react-listview"
+    "url": "https://github.com/jquense/react-boostrap-modals"
   },
   "devDependencies": {
-    "chance": "^0.5.9",
     "css-loader": "^0.7.1",
-    "envify": "^1.2.1",
-    "file-loader": "^0.6.1",
     "gulp": "^3.6.2",
     "gulp-clean": "~0.3.1",
-    "gulp-concat": "^2.2.0",
-    "gulp-header": "^1.0.2",
     "gulp-less": "^1.2.3",
-    "gulp-plumber": "^0.6.3",
     "gulp-react": "~1.0.0",
     "gulp-replace": "~0.4.0",
-    "gulp-uglify": "^0.3.0",
     "gulp-webpack": "^0.3.0",
-    "jsx-loader": "^0.11.0",
+    "jsx-loader": "^0.12.0",
     "karma": "~0.12.23",
     "karma-chrome-launcher": "^0.1.5",
-    "karma-expect": "~1.1.0",
     "karma-mocha": "~0.1.9",
-    "karma-phantomjs-launcher": "~0.1.4",
     "karma-webpack": "~1.2.2",
     "less": "^1.7.4",
     "less-loader": "^0.7.7",
     "mocha": "~1.21.4",
-    "phantomjs": "~1.9.10",
-    "raw-loader": "^0.5.1",
-    "react": ">=0.10.0",
-    "reactify": "^0.13.1",
     "style-loader": "^0.7.0",
     "url-loader": "^0.5.5",
     "webpack": "^1.3.0",
-    "webpack-dev-server": "~1.4.10",
-    "jstransform-loader": "~0.1.1"
+    "webpack-dev-server": "~1.4.10"
   },
   "dependencies": {
-    "react-bootstrap": "~0.12.0",
-    "xtend": "~4.0.0",
-    "react": "~0.11.2"
+    "react": "^0.12.0",
+    "react-classset": "0.0.1",
+    "xtend": "~4.0.0"
   }
 }
