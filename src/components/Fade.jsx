@@ -125,7 +125,7 @@ var FadeAnimation = React.createClass({
     this.currentlyTransitioningKeys[key] = true
 
     if( (!this.props.animate || hasClass(node, 'fade')) && hasClass(node, 'in')) {
-      node.clientLeft
+      node.offsetWidth
       node.className = node.className.replace(/\bin\b/, '')
       
       this.props.animate 
@@ -145,7 +145,7 @@ var FadeAnimation = React.createClass({
     return this.state.child // extend(this.props)
   }
 
-});
+})
 
 module.exports = FadeAnimation;
 
