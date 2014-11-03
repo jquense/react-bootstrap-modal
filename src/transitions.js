@@ -30,7 +30,7 @@ module.exports = {
       , fired;
 
     if(!!endEvent){
-      node.addEventListener(endEvent, handler);
+      node.addEventListener(endEvent, done);
       setTimeout(function(){
         if (!fired) done(fakeEvent)
       }, duration || 2000)

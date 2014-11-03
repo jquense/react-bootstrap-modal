@@ -13,39 +13,54 @@ var FadeAnimation = React.createClass({
 
   getDefaultProps: function() {
     return {
-      'in': false, 
-      component: React.DOM.span,
-
-      onAnimating: function(){},
-      onAnimate:   function(){}
+      'in':     false, 
+      onShow:   function(){},
+      onShown:  function(){},
+      onHide:   function(){},
+      onHidden: function(){},
     };
   },
 
   getInitialState: function() {
     return {
-      child: this.props.children
+      action: 'enter',
+      child: (this.props.in && this.props.children) 
+        ? React.Children.only(this.props.children)
+        : null
     };
   },
 
   componentWillReceiveProps: function(nextProps) {
-    var child
-      , nextChild = nextProps.children
-      , prevChild = this.state.child
-      , leaving   = prevChild != null 
-          && this.currentlyTransitioningKeys[prevChild.key]
-      , entering = nextChild != null 
-          && this.currentlyTransitioningKeys[nextChild.key];
+    var state        = {}
+      , child        = this.state.child
+      , nextChild    = nextProps.children
+      , childChanged = this._childChanged(this.props.children, nextChild)
+      , updated      = (nextProps.in !== this.props.in)
+      , animating, action;
 
-    if( nextChild == null && prevChild != null && !leaving)
-      child = this.leaving = prevChild
+    if(nextChild) 
+      child = nextChild
+    
+    animating  = child && this.currentlyTransitioningKeys[child.key]
 
-    else if( nextChild != null && prevChild == null && !entering)
-      child = this.entering = nextChild
+    if( (updated || childChanged) && !animating){
+      child = this.current = child || nextChild
+      state.action = (nextProps.in === true) ? 'enter' : 'leave'
+    }
 
-    if( child && child !== this.state.child)
-      this.setState({
-        child: child
-      });
+    if( nextProps.in && child && child !== this.state.child)
+      state.child = child
+
+    if ( !!Object.keys(state).length )
+      this.setState(state);
+  },
+
+  _childChanged: function(oldChild, newChild){
+
+    if( (oldChild == null && newChild != null) || (oldChild != null && newChild == null))
+      return true
+
+    return !(oldChild === newChild || oldChild.key === newChild.key)
   },
 
   componentWillMount: function() {
@@ -53,107 +68,87 @@ var FadeAnimation = React.createClass({
   },
 
   componentDidUpdate: function() {
-    var entering = this.entering
-      , leaving = this.leaving;
+    var current = this.current
+      , action = this.state.action;
 
-    this.props.onAnimating();
-    this.entering = null;
-    this.leaving = null;
+    if (current) {
+      this.current = null;
 
-    if (entering) this.performEnter(entering.key)
-    if (leaving)  this.performLeave(leaving.key)
-  },
-
-  performEnter: function(key) {
-    var component = this.refs[key];
-
-    this.currentlyTransitioningKeys[key] = true;
-
-    if (component.componentWillEnter) 
-      component.componentWillEnter(this._handleDoneEntering.bind(this, key));
-    else 
-      this._handleDoneEntering(key);
-  },
-
-  _handleDoneEntering: function(key) {
-    var component = this.refs[key];
-
-    if (component.componentDidEnter) 
-      component.componentDidEnter();
-    
-    delete this.currentlyTransitioningKeys[key];
-
-    if (!this.props.children || this.props.children.key !== key) 
-      return this.performLeave(key); // This was removed before it had fully entered. Remove it.
-    
-    this.props.onAnimate() 
-  },
-
-  performLeave: function(key) {
-    var component = this.refs[key];
-
-    this.currentlyTransitioningKeys[key] = true;
-
-    if (component.componentWillLeave) 
-      component.componentWillLeave(this._handleDoneLeaving.bind(this, key));
-    else 
-      this._handleDoneLeaving(key);
-  },
-
-  _handleDoneLeaving: function(key) {
-    var component = this.refs[key];
-
-    if (component.componentDidLeave) 
-      component.componentDidLeave();
-    
-    delete this.currentlyTransitioningKeys[key];
-
-    this.setState({ child: null });
-    this.props.onAnimate() 
-  },
-
-  render: function() {
-    var childrenToRender = {}
-      , child = this.state.child;
-
-    if( child == null) return null
-
-    childrenToRender[child.key] = cloneWithProps(
-      React.createElement(fadeChild, null, child),
-      { ref: child.key }
-    );
-
-    return this.props.in ? this.props.component(extend(this.props), childrenToRender) : null;
-  },
-
-});
-
-module.exports = FadeAnimation;
-
-
-fadeChild = React.createClass({
-
-  componentWillEnter: function(done) {
-    var node  = this.getDOMNode();
-
-    if( node.className.match(/\bfade\b/)){
-      node.clientLeft
-      node.className += ' in'
-      transitions.on(node, done, 300)
+      if (action === 'enter') this.performEnter(current.key)
+      if (action === 'leave') this.performLeave(current.key)
     }
   },
 
-  componentWillLeave: function(done) {
-    var node  = this.getDOMNode();
+  componentDidMount: function() {
+    var current = this.state.child
+      , action  = this.state.action;
 
-    if( node.className.match(/\bfade\b/) && node.className.match(/\bin\b/)) {
+    if (current) {
+      if (action === 'enter') this.performEnter(current.key)
+      if (action === 'leave') this.performLeave(current.key)
+    }
+  },
+
+  performEnter: function(key) {
+    var node  = this.getDOMNode()
+      , done = this._handleDoneEntering.bind(this, key);
+
+    this.props.onShow() 
+    this.currentlyTransitioningKeys[key] = true;
+
+    if( !hasClass(node, 'fade'))
+      node.className += ' fade'
+    
+    node.clientLeft
+    node.className += ' in'
+    transitions.on(node, done, 300)
+  },
+
+  _handleDoneEntering: function(key) {
+    this.currentlyTransitioningKeys[key] = false
+
+    if (!this.props.children || this.props.children.key !== key) 
+      return this.performLeave(key)
+    
+    this.props.onShown() 
+  },
+
+  performLeave: function(key) {
+    var node = this.getDOMNode()
+      , done = this._handleDoneLeaving.bind(this, key);
+
+    this.props.onHide()
+    this.currentlyTransitioningKeys[key] = true
+
+    if( hasClass(node, 'fade') && hasClass(node, 'in')) {
       node.clientLeft
       node.className = node.className.replace(/\bin\b/, '')
       transitions.on(node, done, 300)
     }
   },
 
+  _handleDoneLeaving: function(key) {    
+    this.currentlyTransitioningKeys[key] = false
+
+    this.setState({ child: null })
+    this.props.onHidden() 
+  },
+
   render: function() {
-    return React.Children.only(this.props.children);
-  }
+    var child = this.state.child;
+
+    // if(child != null){
+    //   child = cloneWithProps(child)
+    //   child.props.ref = this.state.child.props.ref;
+    // }
+      
+    return child // extend(this.props)
+  },
+
 });
+
+module.exports = FadeAnimation;
+
+function hasClass(n, c){
+  return !!n.className.match(new RegExp('\\b' + c + '\\b'))
+}
