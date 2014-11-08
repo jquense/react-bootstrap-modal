@@ -1,7 +1,7 @@
 'use strict';
 var React = require('react')
   , cloneWithProps = require('../cloneWithProps')
-  , Fade = require('../Fade.jsx');
+  , Fade = require('./Fade.jsx');
 
 module.exports = React.createClass({
 
@@ -34,20 +34,19 @@ module.exports = React.createClass({
   },
 
   renderOverlay: function () {
-    var child = this.state.show && cloneWithProps(this.props.modal, {
-          onRequestHide: this.hide,
-          key: 'modal',
-        });
-    // if (!this.state.show)
-    //   return React.DOM.noscript();
-    return React.createElement(Fade, null, child ? child : null)
+    var props = {
+          onRequestHide: this.hide, 
+          key: 'modal', 
+          show: this.state.show
+        };
+
+    return cloneWithProps(this.props.modal, props);
   },
 
   render: function () {
     var child = React.Children.only(this.props.children);
-    return cloneWithProps(child, {
-        onClick: chain(child.props.onClick, this.toggle, this)
-      });
+
+    return cloneWithProps(child, { onClick: chain(child.props.onClick, this.toggle, this) });
   }
 });
 
