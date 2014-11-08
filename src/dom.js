@@ -1,5 +1,4 @@
 "use strict";
-
 var el = document.createElement("div");
 
 var DOM = module.exports = {

@@ -1,13 +1,6 @@
-/**
- * @jsx React.DOM
- */
 'use strict';
 var React = require('react')
-  , extend = require('xtend')
-  , cloneWithProps = require('../cloneWithProps')
   , transitions    = require('../transitions');
-
-var fadeChild;
 
 var FadeAnimation = React.createClass({
 
@@ -37,7 +30,7 @@ var FadeAnimation = React.createClass({
       , nextChild    = nextProps.children
       , childChanged = this._childChanged(this.props.children, nextChild)
       , updated      = (nextProps.in !== this.props.in)
-      , animating, action;
+      , animating;
 
     if(nextChild) 
       child = nextChild

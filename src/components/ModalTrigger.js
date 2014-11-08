@@ -1,7 +1,6 @@
 'use strict';
 var React = require('react')
-  , cloneWithProps = require('../cloneWithProps')
-  , Fade = require('./Fade.jsx');
+  , cloneWithProps = require('react-clonewithprops');
 
 module.exports = React.createClass({
 

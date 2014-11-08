@@ -2,7 +2,6 @@
 /** @jsx React.DOM */
 var React  = require('react')
   , cx     = require('react-classset')
-  , extend = require('xtend')
   , Fade   = require('./Fade.jsx')
   
   , $ = require('../dom');
@@ -44,7 +43,12 @@ var Modal = React.createClass({
   },
 
   render: function () {
-    var modalStyle = { display: 'block' }
+    var { 
+        className
+      , children
+      , title
+      , ...props } = this.props
+      , modalStyle = { display: 'block' }
       , dialogClasses = 'modal-dialog'
       , classes = {
           modal: true,
@@ -59,20 +63,19 @@ var Modal = React.createClass({
       dialogClasses += ' ' + this.state.classes
 
     return (
-      <div ref='modal'
-        {...this.props}
+      <div {...props}
+        ref='modal'
         tabIndex='-1'
-        title={null}
         role='dialog'
         style={modalStyle}
-        className={cx(classes)}
+        className={className + ' ' + cx(classes)}
         onClick={this.props.backdrop ? this.handleBackdropClick : null}>
         {this.props.backdrop && this.renderBackdrop()}
         <div className={dialogClasses} ref='dialog'>
           <div className='modal-content'>
-            { this.props.title && this.renderHeader() }
-            { this.props.children }
-            { !this.props.title && this.renderCloseButton() }
+            { title && this.renderHeader() }
+            { children }
+            { !title && this.renderCloseButton() }
           </div>
         </div>
       </div>
@@ -87,9 +90,11 @@ var Modal = React.createClass({
           'in':   !this.props.animation
         };
 
-    var Backdrop = <div className={cx(classes)} ref="backdrop" key='bd' style={style} onClick={this.handleBackdropClick}/>
-
-    return (<Fade in={this.props.show} animate={this.props.animation}>{Backdrop}</Fade>)
+    return (
+      <Fade in={this.props.show} animate={this.props.animation}>
+        <div className={cx(classes)} ref="backdrop" key='backdrop' style={style} onClick={this.handleBackdropClick}/>
+      </Fade>
+    )
   },
 
   renderHeader: function () {
@@ -117,20 +122,13 @@ var Modal = React.createClass({
   },
 
   _focus: function(e){
-    var self = this
-      , el = this.getDOMNode()
+    var el = this.getDOMNode()
 
-    setTimeout(function(){
-      if (!self.isTopModal(el))
-        e.preventDefault()
-
-      else if ( el !== document.activeElement && !$.contains(el, document.activeElement))
-        self.focus()
-    }, 0)
+    if ( this.isTopModal() && el !== document.activeElement && !$.contains(el, document.activeElement))
+      this.focus()
   },
 
   focus: function(){
-    //console.log('DO IT', document.activeElement)
     this.refs.modal.getDOMNode().focus()
   },
 
@@ -185,8 +183,11 @@ var Modal = React.createClass({
   },
 
   handleDocumentKeyUp: function (e) {
-    if (this.props.keyboard && e.keyCode === 27)
+    if (this.props.keyboard && e.keyCode === 27 && this.isTopModal()){
+      if (this.props.backdrop === 'static')
+        return this.attention()
       this.props.onRequestHide();
+    }
   },
 
   _resizeBackdrop: function(){

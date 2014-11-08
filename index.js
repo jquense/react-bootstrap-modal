@@ -1,4 +1,3 @@
-var Layer = 
 
 module.exports = {
   Modal:          require('./lib/Modal'),
