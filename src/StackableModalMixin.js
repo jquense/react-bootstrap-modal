@@ -1,8 +1,5 @@
 'use strict';
-var $ = require('./dom')
-  , baseIndex = {}
-  , stack = []
-  , zIndexFactor = 10;
+var stack = [];
 
 module.exports = {
 
@@ -21,22 +18,6 @@ module.exports = {
     if(!stack.length)
       document.body.className = document.body.className.replace(/\bmodal-open\b/, '')
   },
-
-  // getZIndex: (function () {
-  //   var modal = document.createElement("div");
-
-  //   modal.className = 'modal hidden'
-
-  //   document.body.appendChild(modal)
-  //   baseIndex.modal = +$.css(modal, 'z-index')
-
-  //   document.body.removeChild(modal)
-
-  //   return function (type) {
-  //     var len = stack.length === 1 ? 0 : stack.length
-  //     return baseIndex[type] + (zIndexFactor * len);
-  //   }
-  // }()),
 
   isTopModal: function isAmericasTopModal(modal){
     return !!stack.length && stack[stack.length - 1] === modal

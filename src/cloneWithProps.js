@@ -1,5 +1,5 @@
 "use strict";
-var React = require('react/lib/ReactElement')
+var React = require('react') ///lib/ReactElement
   , extend = require('xtend')
   , hasOwn = Object.prototype.hasOwnProperty
   , RESERVED = {

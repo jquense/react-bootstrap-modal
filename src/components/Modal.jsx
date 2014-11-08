@@ -25,7 +25,6 @@ var Modal = React.createClass({
   displayName: 'Modal',
 
   mixins: [
-   // FadeMixin,
     require('../StackableModalMixin')
   ],
 
@@ -91,8 +90,7 @@ var Modal = React.createClass({
   },
 
   renderBackdrop: function (Modal) {
-    var onClick
-      , style = this.state.backdropStyle
+    var style = this.state.backdropStyle
       , classes = {
           'modal-backdrop': true,
           'fade': this.props.animation,
