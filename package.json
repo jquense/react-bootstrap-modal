@@ -1,5 +1,5 @@
 {
-  "name": "react-boostrap-modal",
+  "name": "react-bootstrap-modal",
   "version": "0.3.0",
   "description": "Sort-of port of jschr's bootstrap-modal extension. Adds stackable, focusable, modals for tbs 3.0",
   "main": "index.js",
