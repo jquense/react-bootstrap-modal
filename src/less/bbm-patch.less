@@ -1,8 +1,28 @@
-
+@import "variables";
+@import "mixins";
 @import "animation";
 
 .modal-content > .close {
   position: absolute;
   top: 10px;
   right: 10px;
+}
+
+// Scale up the modal
+@media (min-width: @screen-sm-min) {
+  // Automatically set modal's width for larger viewports
+  .modal-dialog {
+    width: @modal-md;
+    margin: 30px auto;
+  }
+  .modal-content {
+    .box-shadow(0 5px 15px rgba(0,0,0,.5));
+  }
+
+  // Modal sizes
+  .modal-sm > .modal-dialog { width: @modal-sm; }
+}
+
+@media (min-width: @screen-md-min) {
+  .modal-lg > .modal-dialog{ width: @modal-lg; }
 }
