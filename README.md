@@ -34,7 +34,7 @@ var Modal = React.createClass({
   });
 
 React.render((
-    <rbm.ModalTrigger modal={Modal}>
+    <rbm.ModalTrigger modal={<Modal />}>
       <button type='button'>Launch modal</button>
     </rbm.ModalTrigger>
   ), document.body);
