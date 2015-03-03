@@ -18,16 +18,20 @@ The Modal more or less follows the react-bootstrap api, with a few exceptions.
 ```javascript
 var rbm = require('react-boostrap-modal')
 
-var Modal = (
-    <rbm.Modal bsSize='lg' animation backdrop='static' title='My Modal'>
-        <div className="modal-body">
-            <p>Some Content here</p>
-        </div>
-        <div className="modal-footer">
-            <button onClick={this.props.onRequestHide}>Close</button>
-        </div>
-    </rbm.Modal>
-)
+var Modal = React.createClass({
+
+      render(){
+        return (
+          <rbm.Modal bsSize='lg' animation backdrop='static' title='My Modal'>
+              <div className="modal-body">
+                  <p>Some Content here</p>
+              </div>
+              <div className="modal-footer">
+                  <button onClick={this.props.onRequestHide}>Close</button>
+              </div>
+          </rbm.Modal>)
+      }
+  });
 
 React.render((
     <rbm.ModalTrigger modal={Modal}>
