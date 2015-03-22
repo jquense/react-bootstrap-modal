@@ -1,17 +1,16 @@
 'use strict';
-var $ = require('./dom')
-  , el = document.createElement("div")
-  , notSupported, endEvent
-  , prefix = ''
+var el = document.createElement('div')
+  , endEvent
+
   , transitions = {
-      O:'otransitionend',
-      Moz:'transitionend',
-      Webkit:'webkitTransitionEnd'
+      O:      'otransitionend',
+      Moz:    'transitionend',
+      Webkit: 'webkitTransitionEnd'
     }
 
 for(var vendor in transitions)
   if (el.style[vendor + 'TransitionProperty'] !== undefined) {
-    prefix = '-' + vendor.toLowerCase() + '-'
+    //prefix = '-' + vendor.toLowerCase() + '-'
     endEvent = transitions[vendor];
     break;
 }  
@@ -29,12 +28,13 @@ module.exports = {
     var fakeEvent = { target: node, currentTarget: node }
       , fired;
 
-    if(!!endEvent){
+    if (endEvent) {
       node.addEventListener(endEvent, done);
       setTimeout(function(){
         if (!fired) done(fakeEvent)
       }, duration || 2000)
-    } else
+    } 
+    else
       setTimeout(done.bind(null, fakeEvent), 0)
 
     function done(event) {

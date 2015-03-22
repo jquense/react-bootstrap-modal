@@ -1,0 +1,134 @@
+
+body {
+  font-size: 14px;
+}
+
+h4 {
+  margin-top: 20px;
+}
+
+
+.example {
+  background-color: white;
+  margin-top: 20px;
+  position: relative;
+  border: #DAE3E7 1px solid;
+  padding: 20px;
+  padding-top: 35px;
+}
+
+code {
+  color: #555;
+  background-color: rgba(0,0,0,0.07);
+}
+
+.example:before {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  color: #959595;
+  content: 'Example';
+}
+.example + pre {
+ /* background-color: #444;*/
+  margin-top: 0 !important;
+  border-top-width: 0;
+}
+
+
+pre > code.hljs {
+  background: none;
+}
+
+pre {
+  background: #F4F4F4;
+  border-radius: 0;
+  border-color: #DAE3E7;
+}
+
+
+.example .demo {
+  margin: 20px auto 10px auto;
+}
+
+.example .api-panel {
+  padding-top: 10px;
+  margin-top: 10px;
+  border-top: #ddd 1px solid;
+}
+
+.example.example-vertical .demo {
+  margin: 20px auto 30px auto;
+}
+
+.example.example-vertical .api-panel {
+  margin-top: 0;
+  border-top: #ddd 1px solid;
+  padding-top: 10px;
+}
+
+
+.editable-editor,
+.editable-editor .cm-s-neo.CodeMirror {
+  background-color: #F4F4F4;
+  height: auto;
+  min-height: 75px;
+}
+
+.CodeMirror{
+  font-size: 12px;
+}
+
+.editable-editor {
+  padding: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.editable-rendered {
+  position: relative;
+  padding: 40px 15px 15px 15px;
+}
+
+.editable-rendered .rw-widget + input,
+.editable-rendered .rw-widget + button,
+.editable-rendered input + .rw-widget,
+.editable-rendered button + .rw-widget,
+.editable-rendered .rw-widget + .rw-widget {
+  margin-top: 15px;
+}
+
+.editable-rendered:before {
+  position: absolute;
+  top: 3px;
+  left: 10px;
+  color: #959595;
+  content: 'Result';
+}
+
+.editable-error {
+  border-top: 1px solid #ddd;
+  background-color: white;
+  margin: 0 -15px;
+  margin-bottom: -15px;
+  padding: 10px;
+}
+
+.editable-example  {
+  position: relative;
+  margin:  0;
+  margin-bottom: 20px;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+}
+
+@media (min-width: 1400px) {
+  .container {
+    width: 750px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    width: 750px;
+  }
+}

@@ -3,103 +3,95 @@ React Bootstrap Modal
 
 Partly a port of [jschr's bootsrap modal](https://github.com/jschr/bootstrap-modal/) Reimplements the Twitter Bootstrap Modal component in a React friendly way. Based on the orginal work of the react-bootstrap team.
 
-### Features
+## Features
 
 - Scoped focus (in twb proper but not react-bootstrap)
 - Stackable!
 - Animation when trying to close a "static" Modal
 - Can be driven programatically, or by another Trigger Component
 
-
-### Use
+## Use
 
 The Modal more or less follows the react-bootstrap api, with a few exceptions.
 
-```javascript
-var rbm = require('react-boostrap-modal')
+```js
+var Modal = require('react-bootstrap-modal')
 
-var Modal = (
-    <rbm.Modal bsSize='lg' animation backdrop='static' title='My Modal'>
-        <div className="modal-body">
+class ModalExample extends React.Component {
+
+  render(){
+    let closeModal = () => this.setState({ open: false })
+
+    let saveAndClose = () => {
+      api.saveData()
+        .then(() => this.setState({ open: false }))
+    }
+
+    return (
+      <div>
+        <button type='button'>Launch modal</button>
+
+        <Modal 
+          show={this.state.open} 
+          onHide={closeModal}
+          aria-labelledby="ModalHeader"
+        >
+          <Modal.Header closeButton>
+            <h4 id='ModalHeader'>A Title Goes here</h4>
+          </Modal.Header>
+          <Modal.Body>
             <p>Some Content here</p>
-        </div>
-        <div className="modal-footer">
-            <button onClick={this.props.onRequestHide}>Close</button>
-        </div>
-    </rbm.Modal>
-)
+          </Modal.Body>
+          <Modal.Footer>
+            // If you don't have anything fancy to do you can use 
+            // the convenient `Dismiss` component, it will trigger `onHide` when clicked
+            <Modal.Dismiss className='btn btn-default'>Cancel</Modal.Dismiss>
 
-React.render((
-    <rbm.ModalTrigger modal={Modal}>
-      <button type='button'>Launch modal</button>
-    </rbm.ModalTrigger>
-  ), document.body);
-
-```
-
-### Modal.Props
-
-- onRequestHide `Function` - this handler is passed in by the parent trigger, and should be called when the Modal should close.
-- title `Node` - Title of the Modal
-- - bsSize `lg sm xs`
-- backdrop `Enum<'static', true, false>(default true)` - Should the modal render a backdrop overlay. `"static"` backdrops are not dismissable by clicking the backdrop.
-- closeButton `Boolean(default true)` - render a close button or not
-- animation `Boolean(default true)` - animate the entry and exit of the modal
-- attentionAnimation `String(default 'shake')` - an animation class added to the modal when a "static" backdrop is clicked
-- keyboard `Boolean(default true)` - Modal is dismissable via the `esc` key
-
-### Styles
-
-You can use this module seperate from Twitter Bootstrap by just including the `/lib/bbm-complete.css` file, or if you are using bootstrap and don't want to have duplicate css on the page just include `/lib/bbm-patch.css`.
-
-
-### Triggers and Layers
-
-Included is the component `ModalTrigger`, you can also create your own triggers by using the `OverlayMixin` and defining a `renderOverlay(...)` method on your component that returns a Modal Element.
-
-Alternatively if you want to trigger Overlays programatically, instead of via a Component, you can use the `Layer` Object.
-
-```javascript
-var Layer = require('react-boostrap-modal').Layer
-var Modal = require('react-boostrap-modal').Modal
-
-module.exports = function alert(message, callback) {
-    var layer = new Layer(document.body, renderModal)
-
-    layer.render()
-
-    function renderModal(){
-        return (
-            <Modal show onRequestHide={finish} backdrop='static'>
-              <div className="modal-body">
-                  <h4>{message}</h4>
-              </div>
-              <div className="modal-footer">
-                  <button onClick={finish}>Close</button>
-              </div>
-            </Modal>
-        )
-    }
-
-    function finish(){
-        callback()
-        layer.destroy() 
-    }
+            // Or you can create your own dismiss buttons
+            <button className='btn btn-primary' onClick={saveAndClose}>Save</button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    )
+  }
 }
+
+React.render(<ModalExample />, document.body);
+
 ```
 
-### `new Layer(container, renderFn)`
+### Modal
 
-The Layer object takes two constructor arguments `container` which is a DOM node taht the layer will be mounted too such as the `body`, and `render` which is a function that, when called, returns the overlay Elements (React element), such as a Modal
+#### Props
+- `show`: `Boolean(default false)` make the Modal visible or hidden
+- `backdrop`: `Enum<'static', true, false>(default true)` - Should the modal render a backdrop overlay. `"static"` backdrops are not dismissable by clicking the backdrop.
 
-### `Layer.render()`
+- `animate`: `Boolean(default true)` - animate the entry and exit of the modal
+- `attentionAnimation`: `String(default 'shake')` - an animation class added to the modal when a "static" backdrop is clicked
+- `keyboard`: `Boolean(default true)` - Modal is dismissable via the `esc` key
 
-Mounts and Renders the return value of the function provided in the constructor (`renderFn`) to the container
+### Modal.Header
 
-### `Layer.unmount()`
+The Header section of Modal. If not included be sure to add an `aria-labelledby` elsewhere to keep the Modal accessible.
 
-Un mounts the component from the container
+#### Props
+  - `closeButton`: `Boolean(default true)` - render a close button or not
+  - `onClose`: `Function()` - a Handle when the close button is clicked. if left `undefined` the Header will automatically wire itself into the parent Modal `onHide()`, so you only need to specify a handler if you want a different behavior
 
-### `Layer.destroy()`
+### Modal.Body
 
-Unmounts, and removes all traces of the layer from the container. This calls `unmount()` so there is no need to call it in addition to `destroy`.
+The main content of the Modal, a convenience Component for: `<div className='modal-body'>content</div>`
+
+### Modal.Footer
+
+The bottom footer of the Modal, a convenience Component for: `<div className='modal-footer'>content</div>`
+
+### Modal.Dismiss
+
+A dismiss button for the Parent Modal. `Dismiss` button will trigger its parent Modal `onHide()` handler. You don't need to use a Dismiss button, they are jsut a Convenience Component.
+  
+## Styles
+
+You can use this module seperate from Twitter Bootstrap by just including the `/lib/styles/rbm-complete.css` file, or if you are using bootstrap and don't want to re-include styles you can just use `/lib/styles/rbm-patch.css`.
+
+If you don't like the bootstrap visual look and feel, you can adjust `variables.less` to suit your needs.

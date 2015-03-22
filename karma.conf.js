@@ -6,42 +6,33 @@ module.exports = function (config) {
 
     basePath: '',
 
-    frameworks: ['mocha', 'expect'],
+    frameworks: ['mocha'],
+
+    reporters: ['mocha'],
 
     files: [
-      './vendor/phantomjs-shim.js',
-      './vendor/sinon-1.10.3.js',
-      'test/*.js', 'test/*.jsx'
+      'vendor/sinon-1.10.3.js', //because sinon hates webpack
+      'test.js'
     ],
 
-    reporters: ['progress'],
-
-    port: 9876,
-    colors: true,
+    port:      9876,
+    colors:    true,
     autoWatch: true,
     singleRun: false,
 
-    // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     logLevel: config.LOG_INFO,
 
-    browsers: ['Chrome'], //'PhantomJS', 
+    browsers: ['PhantomJS'], 
 
     preprocessors: {
-      'test/*.js*': ['webpack']
+      'test.js': ['webpack', 'sourcemap']
     },
 
-    webpack: require('./tasks/webpack.configs').test,
+    webpack: require('./webpack.configs').test,
+
     webpackServer: {
       noInfo: true
-    },
+    }
 
-    plugins: [
-      require("karma-phantomjs-launcher"),
-      require("karma-chrome-launcher"),
-      require("karma-webpack"),
-      require("karma-mocha"),
-      require("karma-expect"),
-    ]
   });
 };
