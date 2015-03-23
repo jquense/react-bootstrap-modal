@@ -75,7 +75,7 @@
   },
   "dependencies": {
     "classnames": "^1.1.4",
-    "dom-helpers": "^1.2.1",
+    "dom-helpers": "^1.2.4",
     "react-layer": "^1.0.1"
   }
 }

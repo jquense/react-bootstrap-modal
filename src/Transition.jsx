@@ -1,16 +1,18 @@
 'use strict';
 var React = require('react')
-  , transitions    = require('./transitions')
+  , transitionEnd = require('dom-helpers/transition/end')
   , cn = require('classnames');
 
 class Transition extends React.Component {
 
   static defaultProps = {
     in:       false, 
-    onShow:   function(){},
-    onShown:  function(){},
-    onHide:   function(){},
-    onHidden: function(){}
+    duration: null,
+    transitioningNode: ()=>{},
+    onTransitionIn:    ()=>{},
+    onTransitionedIn:  ()=>{},
+    onTransitionOut:   ()=>{},
+    onTransitionedOut: ()=>{}
   }
 
   constructor(props, context){
@@ -82,44 +84,42 @@ class Transition extends React.Component {
   }
 
   performEnter(key) {
-    var node  = React.findDOMNode(this)
-      , done = this._handleDoneEntering.bind(this, key);
+    var node = React.findDOMNode(this);
 
-    this.props.onShow() 
-    this.currentlyTransitioningKeys[key] = true;
+    node = this.props.transitioningNode(node) || node
+
+    this.props.onTransitionIn() 
+    this.currentlyTransitioningKeys[key] = true
 
     node.offsetWidth
     this.setState({ in: true })
 
-    transitions.on(node, done, 300)
-  }
+    transitionEnd(node, () => {
+      this.currentlyTransitioningKeys[key] = false
 
-  _handleDoneEntering(key) {
-    this.currentlyTransitioningKeys[key] = false
-
-    if (!this.props.children || this.props.children.key !== key) 
-      return this.performLeave(key)
-    
-    this.props.onShown() 
+      if (!this.props.children || this.props.children.key !== key) 
+        return this.performLeave(key)
+      
+      this.props.onTransitionedIn() 
+    }, this.props.duration)
   }
 
   performLeave(key) {
-    var node = React.findDOMNode(this)
-      , done = this._handleDoneLeaving.bind(this, key);
+    var node = React.findDOMNode(this);
 
-    this.props.onHide()
+    node = this.props.transitioningNode(node) || node
+    
+    this.props.onTransitionOut()
     this.currentlyTransitioningKeys[key] = true
 
     this.setState({ in: false })
     
-    transitions.on(node, done, 300)
-  }
+    transitionEnd(node, () => {    
+      this.currentlyTransitioningKeys[key] = false
 
-  _handleDoneLeaving(key) {    
-    this.currentlyTransitioningKeys[key] = false
-
-    this.setState({ child: null })
-    this.props.onHidden() 
+      this.setState({ child: null })
+      this.props.onTransitionedOut() 
+    }, this.props.duration)
   }
 
   render() {
@@ -137,3 +137,7 @@ class Transition extends React.Component {
 }
 
 module.exports = Transition;
+
+function result(prop){
+  return typeof prop === 'function' ? prop() : prop
+}

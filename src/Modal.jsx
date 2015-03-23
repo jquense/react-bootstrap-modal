@@ -172,7 +172,9 @@ let Modal = (function(){
 
     renderBackdrop(style) {
       return (
-        <Transition className={cn({ fade: this.props.animate })} in={this.props.show}>
+        <Transition 
+          className={cn({ fade: this.props.animate })} 
+          in={this.props.show}>
           <div
             className={cn('modal-backdrop')} 
             ref="backdrop" 
@@ -256,14 +258,21 @@ let Modal = (function(){
   return class extends React.Component {
 
     render() {
+      
      let { 
-        onShow, onShown, onHide, onHidden
+        onTransitionIn, onTransitionedIn, onTransitionOut, onTransitionedOut
       , ...props } = this.props;
 
+      let transitionProps = { onTransitionIn, onTransitionedIn, onTransitionOut, onTransitionedOut };
+
+      let getDialog = el => el.querySelectorAll('.modal-dialog')[0];
+      
       return (
 
-        <Transition in={props.show}
-          {...{ onShow, onShown, onHide, onHidden }}
+        <Transition 
+          {...transitionProps}
+          in={props.show}
+          transitioningNode={getDialog}
           className={cn({ fade: !props.animate })} 
         >
           <Modal {...this.props}>
