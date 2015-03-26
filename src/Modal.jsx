@@ -16,7 +16,7 @@ var React  = require('react')
   , classes = require('dom-helpers/class')
   , events = require('dom-helpers/events')
   , scrollbarWidth = require('dom-helpers/util/scrollbarSize')
-
+  , css = require('dom-helpers/style')
   , cn = require('classnames');
 
 var stack = [];
@@ -66,15 +66,17 @@ let Modal = (function(){
     }
 
     componentDidMount() {
-
-      classes.addClass(document.body, 'modal-open')
-
-      if( stack.indexOf(this) === -1) 
-        stack.push(this)
-
       this._mounted = true
       this._bodyIsOverflowing = document.body.scrollHeight > document.documentElement.clientHeight
 
+      if(!stack.length) {
+        classes.addClass(document.body, 'modal-open')
+        this._styleBody()
+      }
+
+      if( stack.indexOf(this) === -1) 
+        stack.push(this)
+      
       events.on(document, 'keyup', this.handleDocumentKeyUp = e => {
         if (this.props.keyboard && e.keyCode === 27 && this.isTopModal()){
           if (this.props.backdrop === 'static')
@@ -124,8 +126,10 @@ let Modal = (function(){
 
       if(idx !== -1) stack.splice(idx, 1)
         
-      if(!stack.length)
+      if(!stack.length){
         classes.removeClass(document.body, 'modal-open')
+        css(document.body, { 'padding-right': this._containerPadding })
+      }
 
       this._removeFocusListener()
 
@@ -223,6 +227,14 @@ let Modal = (function(){
       this.props.onHide();
     }
 
+    _styleBody(){
+      var padding = parseInt(css(document.body, 'padding-right') || 0, 10)
+
+      this._containerPadding = document.body.style.paddingRight || ''
+
+      if (this._bodyIsOverflowing) 
+        css(document.body, { 'padding-right': `${padding + scrollbarWidth}px` })
+    }
 
     _getStyles() {
       if ( !canUseDOM )

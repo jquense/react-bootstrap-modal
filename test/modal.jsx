@@ -9,12 +9,7 @@ var qsa = document.querySelectorAll.bind(document)
 //console.log(sinon)
 var TestUtils = React.addons.TestUtils
   , render = TestUtils.renderIntoDocument
-  , findTag = TestUtils.findRenderedDOMComponentWithTag
   , findClass = TestUtils.findRenderedDOMComponentWithClass
-  , findAllTag = TestUtils.scryRenderedDOMComponentsWithTag
-  , findAllClass = TestUtils.scryRenderedDOMComponentsWithClass
-  , findType = TestUtils.findRenderedComponentWithType
-  , findAllType = TestUtils.scryRenderedComponentWithType
   , trigger = TestUtils.Simulate;
 
 describe('Modal', () => {

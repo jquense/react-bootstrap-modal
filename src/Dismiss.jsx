@@ -18,9 +18,9 @@ class Dismiss extends React.Component {
     component: 'button',
   }
 
-  static contextTypes = {
-    onModalHide: React.PropTypes.func
-  }
+  // static contextTypes = {
+  //   onModalHide: React.PropTypes.func
+  // }
 
   parentContext(){
     return this._reactInternalInstance._context

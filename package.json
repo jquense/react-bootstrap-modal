@@ -1,5 +1,5 @@
 {
-  "name": "react-bootstrap-modals",
+  "name": "react-bootstrap-modal",
   "version": "1.0.0",
   "description": "",
   "author": {
@@ -7,11 +7,15 @@
     "email": "monastic.panic@gmail.com"
   },
   "main": "lib/index.js",
-  "repository": "jquense/react-bootstrap-modals",
+  "repository": "jquense/react-bootstrap-modal",
   "license": "MIT",
   "keywords": [
-    "react-boostrap-modals",
-    "react-component"
+    "react-boostrap-modal",
+    "react-component",
+    "modal",
+    "portal",
+    "dialog",
+    "bootstrap"
   ],
   "scripts": {
     "test": "karma start --single-run"
