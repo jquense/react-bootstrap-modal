@@ -27,9 +27,10 @@ var Dismiss = (function (_React$Component) {
   };
   Dismiss.defaultProps = {
     component: "button" };
-  Dismiss.contextTypes = {
-    onModalHide: React.PropTypes.func
-  };
+
+  // static contextTypes = {
+  //   onModalHide: React.PropTypes.func
+  // }
 
   Dismiss.prototype.parentContext = function parentContext() {
     return this._reactInternalInstance._context;

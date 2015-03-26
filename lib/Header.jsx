@@ -21,12 +21,6 @@ var ModalHeader = (function (_React$Component) {
   };
 
   ModalHeader.prototype.render = function render() {
-    var child = React.Children.only(this.props.children);
-
-    var title = React.cloneElement(child, {
-      className: cn(child.className, "modal-title")
-    });
-
     return React.createElement(
       "div",
       babelHelpers._extends({}, this.props, {
@@ -45,7 +39,7 @@ var ModalHeader = (function (_React$Component) {
           "×"
         )
       ),
-      title
+      this.props.children
     );
   };
 

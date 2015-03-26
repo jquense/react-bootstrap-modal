@@ -6,6 +6,7 @@ var React = require("react"),
     Transition = require("./Transition"),
     Body = require("./Body"),
     Header = require("./Header"),
+    Title = require("./Title"),
     Footer = require("./Footer"),
     Dismiss = require("./Dismiss"),
     createOverlay = require("./createOverlay"),
@@ -13,6 +14,7 @@ var React = require("react"),
     classes = require("dom-helpers/class"),
     events = require("dom-helpers/events"),
     scrollbarWidth = require("dom-helpers/util/scrollbarSize"),
+    css = require("dom-helpers/style"),
     cn = require("classnames");
 
 var stack = [];
@@ -64,12 +66,15 @@ var Modal = (function () {
     Modal.prototype.componentDidMount = function componentDidMount() {
       var _this = this;
 
-      classes.addClass(document.body, "modal-open");
-
-      if (stack.indexOf(this) === -1) stack.push(this);
-
       this._mounted = true;
       this._bodyIsOverflowing = document.body.scrollHeight > document.documentElement.clientHeight;
+
+      if (!stack.length) {
+        classes.addClass(document.body, "modal-open");
+        this._styleBody();
+      }
+
+      if (stack.indexOf(this) === -1) stack.push(this);
 
       events.on(document, "keyup", this.handleDocumentKeyUp = function (e) {
         if (_this.props.keyboard && e.keyCode === 27 && _this.isTopModal()) {
@@ -118,7 +123,10 @@ var Modal = (function () {
 
       if (idx !== -1) stack.splice(idx, 1);
 
-      if (!stack.length) classes.removeClass(document.body, "modal-open");
+      if (!stack.length) {
+        classes.removeClass(document.body, "modal-open");
+        css(document.body, { "padding-right": this._containerPadding });
+      }
 
       this._removeFocusListener();
 
@@ -174,7 +182,9 @@ var Modal = (function () {
 
       return React.createElement(
         Transition,
-        { className: cn({ fade: this.props.animate }), in: this.props.show },
+        {
+          className: cn({ fade: this.props.animate }),
+          in: this.props.show },
         React.createElement("div", {
           className: cn("modal-backdrop"),
           ref: "backdrop",
@@ -219,6 +229,14 @@ var Modal = (function () {
       if (this.props.backdrop === "static") return this.attention();
 
       this.props.onHide();
+    };
+
+    Modal.prototype._styleBody = function _styleBody() {
+      var padding = parseInt(css(document.body, "padding-right") || 0, 10);
+
+      this._containerPadding = document.body.style.paddingRight || "";
+
+      if (this._bodyIsOverflowing) css(document.body, { "padding-right": "" + (padding + scrollbarWidth) + "px" });
     };
 
     Modal.prototype._getStyles = function _getStyles() {
@@ -266,16 +284,23 @@ var Modal = (function () {
 
     _class.prototype.render = function render() {
       var _props = this.props;
-      var onShow = _props.onShow;
-      var onShown = _props.onShown;
-      var onHide = _props.onHide;
-      var onHidden = _props.onHidden;
-      var props = babelHelpers.objectWithoutProperties(_props, ["onShow", "onShown", "onHide", "onHidden"]);
+      var onTransitionIn = _props.onTransitionIn;
+      var onTransitionedIn = _props.onTransitionedIn;
+      var onTransitionOut = _props.onTransitionOut;
+      var onTransitionedOut = _props.onTransitionedOut;
+      var props = babelHelpers.objectWithoutProperties(_props, ["onTransitionIn", "onTransitionedIn", "onTransitionOut", "onTransitionedOut"]);
+
+      var transitionProps = { onTransitionIn: onTransitionIn, onTransitionedIn: onTransitionedIn, onTransitionOut: onTransitionOut, onTransitionedOut: onTransitionedOut };
+
+      var getDialog = function (el) {
+        return el.querySelectorAll(".modal-dialog")[0];
+      };
 
       return React.createElement(
         Transition,
-        babelHelpers._extends({ in: props.show
-        }, { onShow: onShow, onShown: onShown, onHide: onHide, onHidden: onHidden }, {
+        babelHelpers._extends({}, transitionProps, {
+          in: props.show,
+          transitioningNode: getDialog,
           className: cn({ fade: !props.animate })
         }),
         React.createElement(
@@ -300,6 +325,7 @@ var ModalTrigger = createOverlay(function (props) {
 
 ModalTrigger.Body = Body;
 ModalTrigger.Header = Header;
+ModalTrigger.Title = Title;
 ModalTrigger.Footer = Footer;
 ModalTrigger.Dismiss = Dismiss;
 

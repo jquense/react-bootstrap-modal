@@ -1,7 +1,7 @@
 "use strict";
 var babelHelpers = require("./util/babelHelpers.js");
 var React = require("react"),
-    transitions = require("./transitions"),
+    transitionEnd = require("dom-helpers/transition/end"),
     cn = require("classnames");
 
 var Transition = (function (_React$Component) {
@@ -21,10 +21,12 @@ var Transition = (function (_React$Component) {
   babelHelpers.inherits(Transition, _React$Component);
   Transition.defaultProps = {
     in: false,
-    onShow: function () {},
-    onShown: function () {},
-    onHide: function () {},
-    onHidden: function () {}
+    duration: null,
+    transitioningNode: function () {},
+    onTransitionIn: function () {},
+    onTransitionedIn: function () {},
+    onTransitionOut: function () {},
+    onTransitionedOut: function () {}
   };
 
   Transition.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
@@ -79,43 +81,45 @@ var Transition = (function (_React$Component) {
   };
 
   Transition.prototype.performEnter = function performEnter(key) {
-    var node = React.findDOMNode(this),
-        done = this._handleDoneEntering.bind(this, key);
+    var _this = this;
 
-    this.props.onShow();
+    var node = React.findDOMNode(this);
+
+    node = this.props.transitioningNode(node) || node;
+
+    this.props.onTransitionIn();
     this.currentlyTransitioningKeys[key] = true;
 
     node.offsetWidth;
     this.setState({ in: true });
 
-    transitions.on(node, done, 300);
-  };
+    transitionEnd(node, function () {
+      _this.currentlyTransitioningKeys[key] = false;
 
-  Transition.prototype._handleDoneEntering = function _handleDoneEntering(key) {
-    this.currentlyTransitioningKeys[key] = false;
+      if (!_this.props.children || _this.props.children.key !== key) return _this.performLeave(key);
 
-    if (!this.props.children || this.props.children.key !== key) return this.performLeave(key);
-
-    this.props.onShown();
+      _this.props.onTransitionedIn();
+    }, this.props.duration);
   };
 
   Transition.prototype.performLeave = function performLeave(key) {
-    var node = React.findDOMNode(this),
-        done = this._handleDoneLeaving.bind(this, key);
+    var _this = this;
 
-    this.props.onHide();
+    var node = React.findDOMNode(this);
+
+    node = this.props.transitioningNode(node) || node;
+
+    this.props.onTransitionOut();
     this.currentlyTransitioningKeys[key] = true;
 
     this.setState({ in: false });
 
-    transitions.on(node, done, 300);
-  };
+    transitionEnd(node, function () {
+      _this.currentlyTransitioningKeys[key] = false;
 
-  Transition.prototype._handleDoneLeaving = function _handleDoneLeaving(key) {
-    this.currentlyTransitioningKeys[key] = false;
-
-    this.setState({ child: null });
-    this.props.onHidden();
+      _this.setState({ child: null });
+      _this.props.onTransitionedOut();
+    }, this.props.duration);
   };
 
   Transition.prototype.render = function render() {
@@ -134,3 +138,7 @@ var Transition = (function (_React$Component) {
 })(React.Component);
 
 module.exports = Transition;
+
+function result(prop) {
+  return typeof prop === "function" ? prop() : prop;
+}
