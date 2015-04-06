@@ -6,7 +6,7 @@
     "name": "Jason Quense",
     "email": "monastic.panic@gmail.com"
   },
-  "main": "lib/index.js",
+  "main": "lib/Modal.js",
   "repository": "jquense/react-bootstrap-modal",
   "license": "MIT",
   "keywords": [
@@ -55,7 +55,7 @@
     "gulp-babel-helpers": "^1.1.2",
     "gulp-less": "^2.0.1",
     "gulp-plumber": "^0.6.6",
-    "gulp-rename": "^1.2.0",
+    "gulp-rename": "^1.2.2",
     "imports-loader": "^0.6.3",
     "json-loader": "^0.5.1",
     "karma": "~0.12.23",

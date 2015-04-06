@@ -5,6 +5,7 @@ var gulp    = require('gulp')
   , plumber = require('gulp-plumber')
   , merge   = require('merge-stream')
   , configs = require('./webpack.configs')
+  , rename  = require('gulp-rename')
   , babelTransform = require('gulp-babel-helpers')
   , webpack = require('webpack')
   , WebpackDevServer = require('webpack-dev-server');
@@ -42,6 +43,7 @@ gulp.task('transpile', ['clean'], function(){
           configs.babel
         , './util/babelHelpers.js'
         , './lib/util/babelHelpers.js'))
+      .pipe(rename({ extname: '.js' }))
       .pipe(gulp.dest('./lib'));
 })
 
