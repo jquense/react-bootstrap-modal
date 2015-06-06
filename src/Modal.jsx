@@ -29,7 +29,7 @@ let onFocus = handler => {
 }
 
 let Modal = (function(){
-  
+
   class Modal extends React.Component {
 
     static propTypes = {
@@ -74,9 +74,9 @@ let Modal = (function(){
         this._styleBody()
       }
 
-      if( stack.indexOf(this) === -1) 
+      if( stack.indexOf(this) === -1)
         stack.push(this)
-      
+
       events.on(document, 'keyup', this.handleDocumentKeyUp = e => {
         if (this.props.keyboard && e.keyCode === 27 && this.isTopModal()){
           if (this.props.backdrop === 'static')
@@ -87,7 +87,7 @@ let Modal = (function(){
       })
 
       events.on(window, 'resize', this.handleUpdate = () => this.setState(this._getStyles()))
-      
+
       this._removeFocusListener = onFocus(this._focus.bind(this))
 
       if (this.props.backdrop && this.props.show)
@@ -103,10 +103,10 @@ let Modal = (function(){
 
       if(this.state.attention){
         React.findDOMNode(this).offsetWidth // trigger reflow to allow animation
-        this.setState({ 
+        this.setState({
           ...this._getStyles(),
-          attention: false, 
-          classes:   this.props.attentionAnimation + ' animated' 
+          attention: false,
+          classes:   this.props.attentionAnimation + ' animated'
         })
       }
 
@@ -125,7 +125,7 @@ let Modal = (function(){
         this._removeAttentionClasses()
 
       if(idx !== -1) stack.splice(idx, 1)
-        
+
       if(!stack.length){
         classes.removeClass(document.body, 'modal-open')
         css(document.body, { 'padding-right': this._containerPadding })
@@ -142,26 +142,25 @@ let Modal = (function(){
     }
 
     render() {
-      var { 
+      var {
           className
         , children
         , ...props } = this.props
-        , { 
+        , {
           dialog
         , backdrop } = this.state;
 
       return (
-        <div {...props}
-          ref='modal'
-          tabIndex='-1'
-          role='dialog'
-          style={dialog}
-          className={cn(className, { modal: true })}
-          onClick={this.props.backdrop ? e => this.handleBackdropClick(e) : null}>
+        <div>
+          <div {...props}
+            ref='modal'
+            tabIndex='-1'
+            role='dialog'
+            style={dialog}
+            className={cn(className, { modal: true })}
+            onClick={this.props.backdrop ? e => this.handleBackdropClick(e) : null}>
 
-          {this.props.backdrop && this.renderBackdrop(backdrop)}
-          
-            <div 
+            <div
               key='modal'
               ref='dialog'
               className={cn('modal-dialog', this.state.classes)}
@@ -170,20 +169,23 @@ let Modal = (function(){
                 { children }
               </div>
             </div>
+          </div>
+
+          {this.props.backdrop && this.renderBackdrop(backdrop)}
         </div>
       )
     }
 
     renderBackdrop(style) {
       return (
-        <Transition 
-          className={cn({ fade: this.props.animate })} 
+        <Transition
+          className={cn({ fade: this.props.animate })}
           in={this.props.show}>
           <div
-            className={cn('modal-backdrop')} 
-            ref="backdrop" 
-            key='backdrop' 
-            style={style} 
+            className={cn('modal-backdrop')}
+            ref="backdrop"
+            key='backdrop'
+            style={style}
             onClick={e => this.handleBackdropClick(e)}/>
         </Transition>
       )
@@ -201,9 +203,9 @@ let Modal = (function(){
     }
 
     attention(){
-      this.setState({ 
-        attention: true, 
-        classes:   '' 
+      this.setState({
+        attention: true,
+        classes:   ''
       })
 
       this.focus();
@@ -232,7 +234,7 @@ let Modal = (function(){
 
       this._containerPadding = document.body.style.paddingRight || ''
 
-      if (this._bodyIsOverflowing) 
+      if (this._bodyIsOverflowing)
         css(document.body, { 'padding-right': `${padding + scrollbarWidth}px` })
     }
 
@@ -270,22 +272,22 @@ let Modal = (function(){
   return class extends React.Component {
 
     render() {
-      
-     let { 
+
+     let {
         onTransitionIn, onTransitionedIn, onTransitionOut, onTransitionedOut
       , ...props } = this.props;
 
       let transitionProps = { onTransitionIn, onTransitionedIn, onTransitionOut, onTransitionedOut };
 
       let getDialog = el => el.querySelectorAll('.modal-dialog')[0];
-      
+
       return (
 
-        <Transition 
+        <Transition
           {...transitionProps}
           in={props.show}
           transitioningNode={getDialog}
-          className={cn({ fade: !props.animate })} 
+          className={cn({ fade: !props.animate })}
         >
           <Modal {...this.props}>
             {this.props.children}
