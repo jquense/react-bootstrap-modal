@@ -3,6 +3,8 @@ React Bootstrap Modal
 
 Partly a port of [jschr's bootstrap modal](https://github.com/jschr/bootstrap-modal/). Reimplements the Twitter Bootstrap Modal component in a React friendly way. Based on the orginal work of the react-bootstrap team.
 
+__note__: React bootstrap modal is compatible with bootstrap __3.3.4+__ if you want to use it with an earlier version of bootstrap 3 you need to override the `.modal-backdrop` styles to be the most recent one.
+
 ## Features
 
 - Scoped focus
