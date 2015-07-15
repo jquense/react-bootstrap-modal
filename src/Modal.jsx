@@ -21,6 +21,7 @@ import cn from 'classnames';
 
 var stack = [], baseIndex = {};
 
+var PREFIX = 'modal';
 
 var getZIndex = (function () {
   var modal = document.createElement("div")
@@ -56,6 +57,10 @@ let Modal = (function(){
 
   class Modal extends React.Component {
 
+    static getDefaultPrefix(){
+      return PREFIX
+    }
+
     static propTypes = {
       show:     React.PropTypes.bool,
 
@@ -73,7 +78,6 @@ let Modal = (function(){
       keyboard:           true,
       animate:            true,
       attentionAnimation: 'shake',
-      modalPrefix:        'modal'
     }
 
     static childContextTypes = {
@@ -179,21 +183,23 @@ let Modal = (function(){
           dialog
         , backdrop } = this.state;
 
+      let prefix = this.props.modalPrefix || Modal.getDefaultPrefix();
+
       let modal = (
           <div {...props}
             ref='modal'
             tabIndex='-1'
             role='dialog'
             style={dialog}
-            className={cn(className, this.props.modalPrefix)}
+            className={cn(className, prefix)}
             onClick={this.props.backdrop ? e => this.handleBackdropClick(e) : null}>
 
             <div
               key='modal'
               ref='dialog'
-              className={cn(this.props.modalPrefix + '-dialog', this.props.dialogClassName, this.state.classes)}
+              className={cn(prefix + '-dialog', this.props.dialogClassName, this.state.classes)}
             >
-              <div className={this.props.modalPrefix + '-content' }>
+              <div className={prefix + '-content' }>
                 { children }
               </div>
             </div>
@@ -208,11 +214,12 @@ let Modal = (function(){
     renderBackdrop(modal, styles) {
       let { animate } = this.props;
       let duration = Modal.BACKDROP_TRANSITION_DURATION; //eslint-disable-line no-use-before-define
+      let prefix = this.props.modalPrefix || Modal.getDefaultPrefix();
 
       let backdrop = (
         <div ref="backdrop"
           style={styles}
-          className={cn(this.props.modalPrefix + '-backdrop', { in: this.props.show && !animate })}
+          className={cn(prefix + '-backdrop', { in: this.props.show && !animate })}
           onClick={e => this.handleBackdropClick(e)}
         />
       );
@@ -355,6 +362,18 @@ let Modal = (function(){
 
 let ModalTrigger = createOverlay(props => <Modal {...props}>{ props.children }</Modal>)
 
+ModalTrigger.injectCSSPrefix = function(prefix) {
+  PREFIX = prefix;
+};
+
+function getDefaultPrefix(){
+  return PREFIX
+}
+
+Body.getDefaultPrefix = getDefaultPrefix
+Header.getDefaultPrefix = getDefaultPrefix
+Title.getDefaultPrefix = getDefaultPrefix
+Footer.getDefaultPrefix = getDefaultPrefix
 
 ModalTrigger.Body = Body
 ModalTrigger.Header = Header
@@ -364,7 +383,9 @@ ModalTrigger.Dismiss = Dismiss
 
 ModalTrigger.BaseModal = Modal
 
-Modal.TRANSITION_DURATION = 300;
-Modal.BACKDROP_TRANSITION_DURATION = 150;
+ModalTrigger.TRANSITION_DURATION = 300;
+ModalTrigger.BACKDROP_TRANSITION_DURATION = 150;
+
+
 
 module.exports = ModalTrigger

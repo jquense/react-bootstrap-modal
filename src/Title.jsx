@@ -3,9 +3,15 @@ var cn = require('classnames');
 
 class ModalTitle extends React.Component {
 
+  static getDefaultPrefix(){
+    return 'modal'
+  }
+
   render() {
+    var prefix = this.props.modalPrefix || ModalTitle.getDefaultPrefix();
+
     return (
-      <h4 {...this.props} className={cn(this.props.className,  this.props.modalPrefix + '-title')}>
+      <h4 {...this.props} className={cn(this.props.className,  prefix + '-title')}>
 
         { this.props.children }
 
@@ -21,8 +27,5 @@ ModalTitle.propTypes = {
   modalPrefix: React.PropTypes.string
 };
 
-ModalTitle.defaultProps = {
-  modalPrefix: 'modal'
-};
 
 module.exports = ModalTitle

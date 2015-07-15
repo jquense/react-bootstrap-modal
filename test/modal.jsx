@@ -31,6 +31,20 @@ describe('Modal', () => {
       .should.equal(true)
   })
 
+  // it('should respect prefix', () => {
+  //   Modal.injectCssPrefix('rw-modal')
+
+  //   render(
+  //     <Modal id='test' show>
+  //       <Modal.Header><Modal.Title>hi</Modal.title></Modal.Header>
+  //       <Modal.Body>body</Modal.Body>
+  //       <Modal.Footer>foot</Modal.Footer>
+  //     </Modal>
+  //   );
+
+  //   qsa('.modal-backdrop').length.should.equal(1)
+  // })
+
 
   it('should render backdrop', () => {
     render(<Modal id='test' show/>);

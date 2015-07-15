@@ -6,8 +6,11 @@ class ModalHeader extends React.Component {
 
   static _isModalHeader = true
 
+  static getDefaultPrefix(){
+    return 'modal'
+  }
+
   static defaultProps = {
-    modalPrefix: 'modal',
     closeButton: false,
   }
 
@@ -17,10 +20,12 @@ class ModalHeader extends React.Component {
 
 
   render() {
+    var prefix = this.props.modalPrefix || ModalHeader.getDefaultPrefix();
+
     return (
       <div
         {...this.props}
-        className={cn(this.props.className,  this.props.modalPrefix + '-header')}
+        className={cn(this.props.className,  prefix + '-header')}
       >
         { this.props.closeButton &&
           <Dismiss
