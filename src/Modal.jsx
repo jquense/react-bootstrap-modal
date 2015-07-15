@@ -1,26 +1,50 @@
 'use strict';
-var React  = require('react')
-  , activeElement  = require('react/lib/getActiveElement')
-  , canUseDOM = require('dom-helpers/util/inDOM')
+import React  from 'react';
+import activeElement  from 'react/lib/getActiveElement';
+import canUseDOM from 'dom-helpers/util/inDOM';
 
-  , Transition = require('./Transition')
-  , Body   = require('./Body')
-  , Header = require('./Header')
-  , Title = require('./Title')
-  , Footer = require('./Footer')
-  , Dismiss = require('./Dismiss')
+import Fade from './Fade';
+import Body   from './Body';
+import Header from './Header';
+import Title from './Title';
+import Footer from './Footer';
+import Dismiss from './Dismiss';
 
-  , createOverlay = require('./createOverlay')
+import createOverlay from './createOverlay';
 
-  , contains = require('dom-helpers/query/contains')
-  , classes = require('dom-helpers/class')
-  , events = require('dom-helpers/events')
-  , scrollbarWidth = require('dom-helpers/util/scrollbarSize')
-  , css = require('dom-helpers/style')
-  , cn = require('classnames');
+import contains from 'dom-helpers/query/contains';
+import classes from 'dom-helpers/class';
+import events from 'dom-helpers/events';
+import scrollbarWidth from 'dom-helpers/util/scrollbarSize';
+import css from 'dom-helpers/style';
+import cn from 'classnames';
 
-var stack = [];
+var stack = [], baseIndex = {};
 
+
+var getZIndex = (function () {
+  var modal = document.createElement("div")
+    , backdrop = document.createElement("div")
+    , zIndexFactor;
+
+
+  modal.className = 'modal hide'
+  backdrop.className = 'modal-backdrop hide'
+
+  document.body.appendChild(modal)
+  document.body.appendChild(backdrop)
+
+  baseIndex.modal = +css(modal, 'z-index')
+  baseIndex.backdrop = +css(backdrop, 'z-index')
+  zIndexFactor = baseIndex.modal - baseIndex.backdrop
+
+  document.body.removeChild(modal)
+  document.body.removeChild(backdrop)
+
+  return function (type) {
+    return baseIndex[type] + (zIndexFactor * stack.length);
+  }
+}())
 
 let onFocus = handler => {
   events.on(document, 'focus', handler, true)
@@ -55,14 +79,13 @@ let Modal = (function(){
       super()
 
       this._focus = this._focus.bind(this)
-
       this.state = {
         classes: ''
       }
     }
 
-    componentWillReceiveProps(nextProps) {
-      this._needsStyleUpdate = nextProps.backdrop !== this.props.backdrop
+    componentWillMount() {
+      if ( canUseDOM ) this.lastFocus = activeElement();
     }
 
     componentDidMount() {
@@ -86,15 +109,16 @@ let Modal = (function(){
         }
       })
 
-      events.on(window, 'resize', this.handleUpdate = () => this.setState(this._getStyles()))
+      events.on(window, 'resize',
+        this.handleUpdate = () => this.setState(this._getStyles()))
 
-      this._removeFocusListener = onFocus(this._focus.bind(this))
+      this._removeFocusListener = onFocus(this._focus)
 
       if (this.props.backdrop && this.props.show)
         this.iosClickHack();
 
       this.setState(
-        this._getStyles(), () => this.focus())
+        this._getStyles(), () => this.checkForFocus())
     }
 
     componentDidUpdate(prevProps) {
@@ -124,9 +148,9 @@ let Modal = (function(){
       if( this.state.classes)
         this._removeAttentionClasses()
 
-      if(idx !== -1) stack.splice(idx, 1)
+      if (idx !== -1) stack.splice(idx, 1)
 
-      if(!stack.length){
+      if (!stack.length) {
         classes.removeClass(document.body, 'modal-open')
         css(document.body, { 'padding-right': this._containerPadding })
       }
@@ -150,8 +174,7 @@ let Modal = (function(){
           dialog
         , backdrop } = this.state;
 
-      return (
-        <div>
+      let modal = (
           <div {...props}
             ref='modal'
             tabIndex='-1'
@@ -170,25 +193,44 @@ let Modal = (function(){
               </div>
             </div>
           </div>
-
-          {this.props.backdrop && this.renderBackdrop(backdrop)}
-        </div>
       )
+
+      return  this.props.backdrop
+        ? this.renderBackdrop(modal, backdrop)
+        : modal
     }
 
-    renderBackdrop(style) {
+    renderBackdrop(modal, styles) {
+      let { animate } = this.props;
+      let duration = Modal.BACKDROP_TRANSITION_DURATION; //eslint-disable-line no-use-before-define
+
+      let backdrop = (
+        <div ref="backdrop"
+          style={styles}
+          className={cn('modal-backdrop', { in: this.props.show && !animate })}
+          onClick={e => this.handleBackdropClick(e)}
+        />
+      );
+
       return (
-        <Transition
-          className={cn({ fade: this.props.animate })}
-          in={this.props.show}>
-          <div
-            className={cn('modal-backdrop')}
-            ref="backdrop"
-            key='backdrop'
-            style={style}
-            onClick={e => this.handleBackdropClick(e)}/>
-        </Transition>
-      )
+        <div>
+          { animate
+              ? <Fade transitionAppear in={this.props.show} duration={duration}>{backdrop}</Fade>
+              : backdrop
+          }
+          {modal}
+        </div>
+      );
+    }
+
+    checkForFocus() {
+      let current = activeElement()
+        , focusInModal = current && contains(React.findDOMNode(this.refs.modal), current);
+
+      if (this.props.autoFocus && !focusInModal) {
+        this.lastFocus = current;
+        this.focus();
+      }
     }
 
     _focus(){
@@ -215,7 +257,6 @@ let Modal = (function(){
       React.findDOMNode(this.refs.modal).onclick = ()=>{};
       React.findDOMNode(this.refs.backdrop).onclick = ()=>{};
     }
-
 
     isTopModal(){
       return !!stack.length && stack[stack.length - 1] === this
@@ -249,11 +290,12 @@ let Modal = (function(){
 
       return {
         dialog: {
+          zIndex: getZIndex('modal'),
           paddingRight: bodyIsOverflowing && !modalIsOverflowing ? scrollbarWidth : void 0,
           paddingLeft:  !bodyIsOverflowing && modalIsOverflowing ? scrollbarWidth : void 0
         },
         backdrop: {
-          height: scrollHt
+          zIndex: getZIndex('backdrop')
         }
       }
     }
@@ -269,31 +311,38 @@ let Modal = (function(){
 
   // its easier to just wrap the whole component in another one for the Transition
   // That way we don't need to do checks for is dialog mounted, etc in the above, simplifying the logic
-  return class extends React.Component {
+  return class ModalPortal extends React.Component {
+
+    static defaultProps = Modal.defaultProps
 
     render() {
-
-     let {
-        onTransitionIn, onTransitionedIn, onTransitionOut, onTransitionedOut
-      , ...props } = this.props;
-
-      let transitionProps = { onTransitionIn, onTransitionedIn, onTransitionOut, onTransitionedOut };
+      let { children, ...props } = this.props;
 
       let getDialog = el => el.querySelectorAll('.modal-dialog')[0];
 
-      return (
+      let show = !!props.show;
 
-        <Transition
-          {...transitionProps}
-          in={props.show}
-          transitioningNode={getDialog}
-          className={cn({ fade: !props.animate })}
-        >
-          <Modal {...this.props}>
-            {this.props.children}
-          </Modal>
-        </Transition>
-      )
+      let modal = (
+        <Modal {...props} ref='modal'>
+          { children }
+        </Modal>
+      );
+
+      return (
+        props.animate
+          ? (
+            <Fade
+              in={show}
+              transitioningNode={getDialog}
+              transitionAppear={show}
+              duration={Modal.TRANSITION_DURATION}
+              unmountOnExit
+            >
+              { modal }
+            </Fade>
+          )
+          : show && modal
+      );
     }
   }
 })();
@@ -309,5 +358,8 @@ ModalTrigger.Footer = Footer
 ModalTrigger.Dismiss = Dismiss
 
 ModalTrigger.BaseModal = Modal
+
+Modal.TRANSITION_DURATION = 300;
+Modal.BACKDROP_TRANSITION_DURATION = 150;
 
 module.exports = ModalTrigger

@@ -33,6 +33,16 @@
   }
 }
 
+//
+// Modals
+// --------------------------------------------------
+
+// .modal-open      - body class for killing the scroll
+// .modal           - container to scroll within
+// .modal-dialog    - positioning shell for the actual modal
+// .modal-content   - actual modal w/ bg and corners and shit
+
+// Kill the scroll on the body
 .modal-open {
   overflow: hidden;
 }
@@ -87,10 +97,12 @@
 
 // Modal background
 .modal-backdrop {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
+  bottom: 0;
   left: 0;
+  z-index: @zindex-modal-background;
   background-color: @modal-backdrop-bg;
   // Fade for backdrop
   &.fade { .opacity(0); }
@@ -144,6 +156,7 @@
   }
 }
 
+
 // Scale up the modal
 @media (min-width: @screen-sm-min) {
   // Automatically set modal's width for larger viewports
@@ -154,4 +167,11 @@
   .modal-content {
     .box-shadow(0 5px 15px rgba(0,0,0,.5));
   }
+
+  // Modal sizes
+  .modal-sm { width: @modal-sm; }
+}
+
+@media (min-width: @screen-md-min) {
+  .modal-lg { width: @modal-lg; }
 }
