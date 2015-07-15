@@ -58,17 +58,22 @@ let Modal = (function(){
 
     static propTypes = {
       show:     React.PropTypes.bool,
+
       backdrop: React.PropTypes.oneOf(['static', true, false]),
       keyboard: React.PropTypes.bool,
       animate:  React.PropTypes.bool,
-      onHide:   React.PropTypes.func
+      onHide:   React.PropTypes.func,
+
+      modalPrefix: React.PropTypes.string,
+      dialogClassName: React.PropTypes.string,
     }
 
     static defaultProps = {
       backdrop:           true,
       keyboard:           true,
       animate:            true,
-      attentionAnimation: 'shake'
+      attentionAnimation: 'shake',
+      modalPrefix:        'modal'
     }
 
     static childContextTypes = {
@@ -180,15 +185,15 @@ let Modal = (function(){
             tabIndex='-1'
             role='dialog'
             style={dialog}
-            className={cn(className, { modal: true })}
+            className={cn(className, this.props.modalPrefix)}
             onClick={this.props.backdrop ? e => this.handleBackdropClick(e) : null}>
 
             <div
               key='modal'
               ref='dialog'
-              className={cn('modal-dialog', this.state.classes)}
+              className={cn(this.props.modalPrefix + '-dialog', this.props.dialogClassName, this.state.classes)}
             >
-              <div className='modal-content'>
+              <div className={this.props.modalPrefix + '-content' }>
                 { children }
               </div>
             </div>
@@ -207,7 +212,7 @@ let Modal = (function(){
       let backdrop = (
         <div ref="backdrop"
           style={styles}
-          className={cn('modal-backdrop', { in: this.props.show && !animate })}
+          className={cn(this.props.modalPrefix + '-backdrop', { in: this.props.show && !animate })}
           onClick={e => this.handleBackdropClick(e)}
         />
       );

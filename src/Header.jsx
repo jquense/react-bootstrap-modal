@@ -7,6 +7,7 @@ class ModalHeader extends React.Component {
   static _isModalHeader = true
 
   static defaultProps = {
+    modalPrefix: 'modal',
     closeButton: false,
   }
 
@@ -17,15 +18,15 @@ class ModalHeader extends React.Component {
 
   render() {
     return (
-      <div 
-        {...this.props} 
-        className={cn(this.props.className, 'modal-header')}
+      <div
+        {...this.props}
+        className={cn(this.props.className,  this.props.modalPrefix + '-header')}
       >
-        { this.props.closeButton && 
-          <Dismiss 
+        { this.props.closeButton &&
+          <Dismiss
             className='close'
-            aria-label={this.props['aria-label'] || 'Close Modal'} 
-            style={{ marginTop: -2 }} 
+            aria-label={this.props['aria-label'] || 'Close Modal'}
+            style={{ marginTop: -2 }}
           >
             <span aria-hidden="true">
               &times;

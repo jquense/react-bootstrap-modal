@@ -8,12 +8,12 @@ function makeConfig(options){
     , plugins = options.plugins || []
 
   var loaders = [
-    { test: /\.css$/,  loader: options.extractStyles 
-        ? ExtractTextPlugin.extract("style-loader", "css-loader") 
+    { test: /\.css$/,  loader: options.extractStyles
+        ? ExtractTextPlugin.extract("style-loader", "css-loader")
         : "style-loader!css-loader" },
 
-    { test: /\.less$/, loader: options.extractStyles  
-        ? ExtractTextPlugin.extract("style-loader", "css-loader!less-loader")  
+    { test: /\.less$/, loader: options.extractStyles
+        ? ExtractTextPlugin.extract("style-loader", "css-loader!less-loader")
         : "style-loader!css-loader!less-loader" },
 
     { test: /\.gif$/, loader: "url-loader?mimetype=image/png" },
@@ -24,7 +24,7 @@ function makeConfig(options){
   ];
 
   if (options.hot){
-    loaders.splice(loaders.length - 1,0, 
+    loaders.splice(loaders.length - 1,0,
       { test: /\.jsx$|\.js$/, loader: 'react-hot-loader', exclude: /node_modules/ })
 
     plugins.push(
@@ -42,7 +42,7 @@ function makeConfig(options){
     loaders = loaders.concat(options.loaders)
 
 
-  if (options.minimize) 
+  if (options.minimize)
     plugins.push(
       new webpack.optimize.UglifyJsPlugin(),
       new webpack.optimize.DedupePlugin(),
@@ -56,7 +56,7 @@ function makeConfig(options){
       new webpack.DefinePlugin({
         '__VERSION__': JSON.stringify(pkg.version)
       }));
-  
+
   if (options.extractStyles)
     plugins.push(
       new ExtractTextPlugin(options.styleName || "styles.css", {
@@ -65,7 +65,7 @@ function makeConfig(options){
 
   if (options.banner) {
     plugins.push(
-      new webpack.BannerPlugin( 
+      new webpack.BannerPlugin(
         'v' + JSON.stringify(pkg.version) + ' | (c) ' + (new Date).getFullYear() + ' Jason Quense | '
         + 'https://github.com/jquense/react-widgets/blob/master/License.txt'
         , { entryOnly : true }))
@@ -107,7 +107,7 @@ module.exports = {
 
     minimize: true,
 
-    extractStyles: true,
+    extractStyles: false,
 
     styleName: 'docs.css',
 
@@ -135,7 +135,7 @@ module.exports = {
 
     hot: true,
 
-    extractStyles: true,
+    extractStyles: false,
 
     styleName: 'public/docs.css',
 
@@ -158,7 +158,7 @@ module.exports = {
   test: makeConfig({
 
     devtool: 'inline-source-map',
-    
+
     loaders: [
       { test: /sinon-chai/, loader: "imports?define=>false" }
     ]

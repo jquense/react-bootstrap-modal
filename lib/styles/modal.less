@@ -43,12 +43,12 @@
 // .modal-content   - actual modal w/ bg and corners and shit
 
 // Kill the scroll on the body
-.modal-open {
+.@{modal-prefix}-open {
   overflow: hidden;
 }
 
 // Container that the modal scrolls within
-.modal {
+.@{modal-prefix} {
   display: none;
   overflow: hidden;
   position: fixed;
@@ -64,26 +64,26 @@
   outline: 0;
 
   // When fading in the modal, animate it to slide down
-  &.fade .modal-dialog {
+  &.fade .@{modal-prefix}-dialog {
     .translate(0, -25%);
     .transition-transform(~"0.3s ease-out");
   }
-  &.in .modal-dialog { .translate(0, 0) }
+  &.in .@{modal-prefix}-dialog { .translate(0, 0) }
 }
-.modal-open .modal {
+.@{modal-prefix}-open .@{modal-prefix} {
   overflow-x: hidden;
   overflow-y: auto;
 }
 
 // Shell div to position the modal with bottom padding
-.modal-dialog {
+.@{modal-prefix}-dialog {
   position: relative;
   width: auto;
   margin: 10px;
 }
 
 // Actual modal
-.modal-content {
+.@{modal-prefix}-content {
   position: relative;
   background-color: @modal-content-bg;
   border: 1px solid @modal-content-fallback-border-color; //old browsers fallback (ie8 etc)
@@ -96,7 +96,7 @@
 }
 
 // Modal background
-.modal-backdrop {
+.@{modal-prefix}-backdrop {
   position: fixed;
   top: 0;
   right: 0;
@@ -111,31 +111,31 @@
 
 // Modal header
 // Top section of the modal w/ title and dismiss
-.modal-header {
+.@{modal-prefix}-header {
   padding: @modal-title-padding;
   border-bottom: 1px solid @modal-header-border-color;
   min-height: (@modal-title-padding + @modal-title-line-height);
 }
 // Close icon
-.modal-header .close {
+.@{modal-prefix}-header .close {
   margin-top: -2px;
 }
 
 // Title text within header
-.modal-title {
+.@{modal-prefix}-title {
   margin: 0;
   line-height: @modal-title-line-height;
 }
 
 // Modal body
 // Where all modal content resides (sibling of .modal-header and .modal-footer)
-.modal-body {
+.@{modal-prefix}-body {
   position: relative;
   padding: @modal-inner-padding;
 }
 
 // Footer (for actions)
-.modal-footer {
+.@{modal-prefix}-footer {
   padding: @modal-inner-padding;
   text-align: right; // right align buttons
   border-top: 1px solid @modal-footer-border-color;
@@ -160,18 +160,18 @@
 // Scale up the modal
 @media (min-width: @screen-sm-min) {
   // Automatically set modal's width for larger viewports
-  .modal-dialog {
+  .@{modal-prefix}-dialog {
     width: @modal-md;
     margin: 30px auto;
   }
-  .modal-content {
+  .@{modal-prefix}-content {
     .box-shadow(0 5px 15px rgba(0,0,0,.5));
   }
 
   // Modal sizes
-  .modal-sm { width: @modal-sm; }
+  .@{modal-prefix}-sm { width: @modal-sm; }
 }
 
 @media (min-width: @screen-md-min) {
-  .modal-lg { width: @modal-lg; }
+  .@{modal-prefix}-lg { width: @modal-lg; }
 }

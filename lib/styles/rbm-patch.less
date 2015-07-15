@@ -2,20 +2,20 @@
 @import "mixins";
 @import "animation";
 
-.modal {
-  display: block
+.@{modal-prefix} {
+  display: block;
 }
 
-.modal-content > .close {
+.@{modal-prefix}-content > .close {
   position: absolute;
   top: 10px;
   right: 10px;
 }
 
 @media (min-width: @screen-sm-min) {
-  .modal-sm > .modal-dialog { width: @modal-sm; }
+  .@{modal-prefix}-sm > .@{modal-prefix}-dialog { width: @modal-sm; }
 }
 
 @media (min-width: @screen-md-min) {
-  .modal-lg > .modal-dialog{ width: @modal-lg; }
+  .@{modal-prefix}-lg > .@{modal-prefix}-dialog{ width: @modal-lg; }
 }

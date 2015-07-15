@@ -5,7 +5,7 @@ class ModalTitle extends React.Component {
 
   render() {
     return (
-      <h4 {...this.props} className={cn(this.props.className, 'modal-title')}>
+      <h4 {...this.props} className={cn(this.props.className,  this.props.modalPrefix + '-title')}>
 
         { this.props.children }
 
@@ -13,5 +13,16 @@ class ModalTitle extends React.Component {
     );
   }
 }
+
+ModalTitle.propTypes = {
+  /**
+   * A css class applied to the Component
+   */
+  modalPrefix: React.PropTypes.string
+};
+
+ModalTitle.defaultProps = {
+  modalPrefix: 'modal'
+};
 
 module.exports = ModalTitle
