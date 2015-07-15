@@ -330,7 +330,7 @@ let Modal = (function(){
     render() {
       let { children, ...props } = this.props;
 
-      let getDialog = el => el.querySelectorAll('.modal-dialog')[0];
+      let getDialog = el => el.querySelectorAll(`.${PREFIX}-dialog`)[0];
 
       let show = !!props.show;
 
