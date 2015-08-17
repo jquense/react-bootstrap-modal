@@ -1,5 +1,6 @@
 
 var React = require('react/addons');
+var { findDOMNode } = require('react-dom')
 var Modal = require('../src/Modal');
 var $ = require('dom-helpers')
 var simulant = require('simulant')
@@ -88,12 +89,6 @@ describe('Modal', () => {
     simulant.fire(qsa('.modal')[0], 'keyup', { keyCode: 27 })
   })
 
-  it('should not trigger close on ESC when backdrop is static', () => {
-    render(<Modal show backdrop='static' onHide={()=> {throw new Error('should not trigger onHide')}}/>);
-
-    simulant.fire(qsa('.modal')[0], 'keyup', { keyCode: 27 })
-  })
-
   describe('Header', ()=> {
 
     it('should include a close button', () => {
@@ -133,11 +128,11 @@ describe('Modal', () => {
 
       var inst = render(<Modal.Dismiss component='span'/>);
 
-      React.findDOMNode(inst).tagName.should.equal('SPAN')
+      findDOMNode(inst).tagName.should.equal('SPAN')
 
       inst = render(<Modal.Dismiss component={Button}/>)
 
-      React.findDOMNode(inst).tagName.should.equal('A')
+      findDOMNode(inst).tagName.should.equal('A')
     })
   })
 })

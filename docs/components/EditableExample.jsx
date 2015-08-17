@@ -2,6 +2,7 @@
 'use strict';
 
 var React = require('react')
+  , ReactDOM = require('react-dom')
   , CodeMirrorEditor = require('./codemirror')
   , babel = require('babel/browser')
   , Modal = require('../../src/Modal')
@@ -9,7 +10,7 @@ var React = require('react')
 
 
 function scopedEval(code, mountNode)  {
-  var context = { Modal, mountNode, React }
+  var context = { Modal, mountNode, React, ReactDOM }
 
   return (new Function( "with(this) { " + code + "}")).call(context);
 }
@@ -37,9 +38,9 @@ module.exports = React.createClass({
   },
 
   handleCodeChange: function(value) {
-    this.setState({code: value, error: null }, 
+    this.setState({code: value, error: null },
       () => this.executeCode());
-    
+
   },
 
   compileCode: function() {
@@ -73,7 +74,7 @@ module.exports = React.createClass({
     clearTimeout(this.timeoutID);
     // execute code only when the state's not being updated by switching tab
     // this avoids re-displaying the error, which comes after a certain delay
-    if (this.state.code !== nextState.code) 
+    if (this.state.code !== nextState.code)
       setTimeout(() => this.executeCode());
   },
 
@@ -83,25 +84,25 @@ module.exports = React.createClass({
   },
 
   componentWillUnmount: function() {
-    var mountNode = this.refs.mount.getDOMNode();
-    
+    var mountNode = this.refs.mount;
+
     try {
-      React.unmountComponentAtNode(mountNode);
-    } 
+      ReactDOM.unmountComponentAtNode(mountNode);
+    }
     catch (e) { }
   },
 
   executeCode: function() {
-    var mountNode = this.refs.mount.getDOMNode();
+    var mountNode = this.refs.mount;
 
     try {
-      React.unmountComponentAtNode(mountNode);
-    } 
+      ReactDOM.unmountComponentAtNode(mountNode);
+    }
     catch (e) { }
 
     try {
       scopedEval(this.compileCode(), mountNode);
-    } 
+    }
     catch (err) {
       this.setTimeout(() => {
         this.setState({ error: err.toString() })

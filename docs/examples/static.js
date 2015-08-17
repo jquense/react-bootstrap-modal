@@ -23,12 +23,16 @@ class Static extends React.Component {
           </Modal.Body>
 
           <Modal.Footer>
-            <Modal.Dismiss className='btn btn-default'>Close</Modal.Dismiss>
+            <Modal.Dismiss
+              className='btn btn-default'
+            >
+              Close
+            </Modal.Dismiss>
           </Modal.Footer>
         </Modal>
 
-        <button 
-          className='btn btn-primary' 
+        <button
+          className='btn btn-primary'
           onClick={() => this.setState({ open: true }) }
         >
           Open Modal
@@ -38,7 +42,7 @@ class Static extends React.Component {
   }
 }
 
-React.render(<Static/>, mountNode)
+ReactDOM.render(<Static/>, mountNode)
 `
 
 return code

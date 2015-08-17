@@ -1,7 +1,9 @@
-'use strict';
 import React  from 'react';
-import activeElement  from 'react/lib/getActiveElement';
+import { findDOMNode } from 'react-dom';
 import canUseDOM from 'dom-helpers/util/inDOM';
+
+import BaseModal from 'react-overlays/lib/Modal';
+import isOverflowing from 'react-overlays/lib/utils/isOverflowing';
 
 import Fade from './Fade';
 import Body   from './Body';
@@ -10,8 +12,7 @@ import Title from './Title';
 import Footer from './Footer';
 import Dismiss from './Dismiss';
 
-import createOverlay from './createOverlay';
-
+import ownerDocument from 'dom-helpers/ownerDocument';
 import contains from 'dom-helpers/query/contains';
 import classes from 'dom-helpers/class';
 import events from 'dom-helpers/events';
@@ -19,350 +20,216 @@ import scrollbarWidth from 'dom-helpers/util/scrollbarSize';
 import css from 'dom-helpers/style';
 import cn from 'classnames';
 
-var stack = [], baseIndex = {};
-
+var baseIndex = {};
 var PREFIX = 'modal';
 
-var getZIndex = (function () {
-  var modal = document.createElement("div")
-    , backdrop = document.createElement("div")
-    , zIndexFactor;
+var getZIndex;
 
+class ModalContent extends React.Component {
 
-  modal.className = 'modal hide'
-  backdrop.className = 'modal-backdrop hide'
-
-  document.body.appendChild(modal)
-  document.body.appendChild(backdrop)
-
-  baseIndex.modal = +css(modal, 'z-index')
-  baseIndex.backdrop = +css(backdrop, 'z-index')
-  zIndexFactor = baseIndex.modal - baseIndex.backdrop
-
-  document.body.removeChild(modal)
-  document.body.removeChild(backdrop)
-
-  return function (type) {
-    return baseIndex[type] + (zIndexFactor * stack.length);
+  static childContextTypes = {
+    onModalHide: React.PropTypes.func
   }
-}())
 
-let onFocus = handler => {
-  events.on(document, 'focus', handler, true)
+  getChildContext(){
+    return this._context || (this._context = { onModalHide: this.props.onHide })
+  }
 
-  return () => events.off(document, 'focus', handler, true)
+  render() {
+    return (
+      <div {...this.props}>
+        { this.props.children }
+      </div>
+    );
+  }
 }
 
-let Modal = (function(){
 
-  class Modal extends React.Component {
+class Modal extends React.Component {
 
-    static getDefaultPrefix(){
-      return PREFIX
+  static getDefaultPrefix(){
+    return PREFIX
+  }
+
+  static propTypes = {
+    show:     React.PropTypes.bool,
+
+    backdrop: React.PropTypes.oneOf(['static', true, false]),
+    keyboard: React.PropTypes.bool,
+    animate:  React.PropTypes.bool,
+    onHide:   React.PropTypes.func,
+
+    modalPrefix: React.PropTypes.string,
+    dialogClassName: React.PropTypes.string,
+  }
+
+  static defaultProps = {
+    backdrop:           true,
+    keyboard:           true,
+    animate:            true,
+    attentionAnimation: 'shake',
+  }
+
+  static childContextTypes = {
+    onModalHide: React.PropTypes.func
+  }
+
+  getChildContext(){
+    return this._context || (this._context = { onModalHide: this.props.onHide })
+  }
+
+  constructor(){
+    super()
+    this._show = this._show.bind(this)
+    this._removeAttentionClasses = this._removeAttentionClasses.bind(this)
+
+    this.state = {
+      classes: ''
     }
+  }
 
-    static propTypes = {
-      show:     React.PropTypes.bool,
+  componentDidMount() {
+    getZIndex = getZIndex || (function () {
+      var modal = document.createElement("div")
+        , backdrop = document.createElement("div")
+        , zIndexFactor;
 
-      backdrop: React.PropTypes.oneOf(['static', true, false]),
-      keyboard: React.PropTypes.bool,
-      animate:  React.PropTypes.bool,
-      onHide:   React.PropTypes.func,
+      modal.className = 'modal hide'
+      backdrop.className = 'modal-backdrop hide'
 
-      modalPrefix: React.PropTypes.string,
-      dialogClassName: React.PropTypes.string,
-    }
+      document.body.appendChild(modal)
+      document.body.appendChild(backdrop)
 
-    static defaultProps = {
-      backdrop:           true,
-      keyboard:           true,
-      animate:            true,
-      attentionAnimation: 'shake',
-    }
+      baseIndex.modal = +css(modal, 'z-index')
+      baseIndex.backdrop = +css(backdrop, 'z-index')
+      zIndexFactor = baseIndex.modal - baseIndex.backdrop
 
-    static childContextTypes = {
-      onModalHide: React.PropTypes.func
-    }
+      document.body.removeChild(modal)
+      document.body.removeChild(backdrop)
 
-    constructor(){
-      super()
-
-      this._focus = this._focus.bind(this)
-      this.state = {
-        classes: ''
+      return function (type) {
+        return baseIndex[type] + (zIndexFactor * (BaseModal.manager.modals.length - 1));
       }
-    }
+    }())
+  }
 
-    componentWillMount() {
-      if ( canUseDOM ) this.lastFocus = activeElement();
-    }
+  _show(prevProps) {
+    if (this.props.show)
+      this.setState(this._getStyles())
+  }
 
-    componentDidMount() {
-      this._mounted = true
-      this._bodyIsOverflowing = document.body.scrollHeight > document.documentElement.clientHeight
+  render() {
+    var {
+        className
+      , children
+      , keyboard
+      , ...props } = this.props
+      , {
+        dialog
+      , backdrop } = this.state;
 
-      if(!stack.length) {
-        classes.addClass(document.body, 'modal-open')
-        this._styleBody()
-      }
+    let prefix = this.props.modalPrefix || Modal.getDefaultPrefix();
 
-      if( stack.indexOf(this) === -1)
-        stack.push(this)
-
-      events.on(document, 'keyup', this.handleDocumentKeyUp = e => {
-        if (this.props.keyboard && e.keyCode === 27 && this.isTopModal()){
-          if (this.props.backdrop === 'static')
-            return this.attention()
-
-          this.props.onHide();
-        }
-      })
-
-      events.on(window, 'resize',
-        this.handleUpdate = () => this.setState(this._getStyles()))
-
-      this._removeFocusListener = onFocus(this._focus)
-
-      if (this.props.backdrop && this.props.show)
-        this.iosClickHack();
-
-      this.setState(
-        this._getStyles(), () => this.checkForFocus())
-    }
-
-    componentDidUpdate(prevProps) {
-      if (this.props.backdrop && this.props.show && this.props.show !== prevProps.show)
-        this.iosClickHack();
-
-      if(this.state.attention){
-        React.findDOMNode(this).offsetWidth // trigger reflow to allow animation
-        this.setState({
-          ...this._getStyles(),
-          attention: false,
-          classes:   this.props.attentionAnimation + ' animated'
-        })
-      }
-
-      if (this._needsStyleUpdate) {
-        this._needsStyleUpdate = false
-        this.setState(this._getStyles())
-      }
-    }
-
-    componentWillUnmount () {
-      var idx = stack.indexOf(this)
-
-      this._mounted = false
-
-      if( this.state.classes)
-        this._removeAttentionClasses()
-
-      if (idx !== -1) stack.splice(idx, 1)
-
-      if (!stack.length) {
-        classes.removeClass(document.body, 'modal-open')
-        css(document.body, { 'padding-right': this._containerPadding })
-      }
-
-      this._removeFocusListener()
-
-      events.off(document, 'keyup', this.handleDocumentKeyUp);
-      events.off(window, 'resize', this.handleUpdate)
-    }
-
-    getChildContext(){
-      return { onModalHide: this.props.onHide }
-    }
-
-    render() {
-      var {
-          className
-        , children
-        , ...props } = this.props
-        , {
-          dialog
-        , backdrop } = this.state;
-
-      let prefix = this.props.modalPrefix || Modal.getDefaultPrefix();
-
-      let modal = (
-          <div {...props}
-            ref='modal'
-            tabIndex='-1'
-            role='dialog'
-            style={dialog}
-            className={cn(className, prefix)}
-            onClick={this.props.backdrop ? e => this.handleBackdropClick(e) : null}>
-
-            <div
-              key='modal'
-              ref='dialog'
-              className={cn(prefix + '-dialog', this.props.dialogClassName, this.state.classes)}
-            >
-              <div className={prefix + '-content' }>
-                { children }
-              </div>
-            </div>
+    let modal = (
+      <div {...props}
+        ref='modal'
+        style={dialog}
+        className={cn(className, prefix)}
+        onClick={this.props.backdrop ? e => this.handleBackdropClick(e) : null}
+      >
+        <div
+          key='modal'
+          ref='dialog'
+          className={cn(
+              prefix + '-dialog'
+            , this.props.dialogClassName
+            , this.state.classes, {
+              [prefix + '-sm']: props.small || props.sm,
+              [prefix + '-lg']: props.large || props.lg,
+            }
+          )}
+        >
+          <div className={prefix + '-content' }>
+            { children }
           </div>
-      )
-
-      return  this.props.backdrop
-        ? this.renderBackdrop(modal, backdrop)
-        : modal
-    }
-
-    renderBackdrop(modal, styles) {
-      let { animate } = this.props;
-      let duration = Modal.BACKDROP_TRANSITION_DURATION; //eslint-disable-line no-use-before-define
-      let prefix = this.props.modalPrefix || Modal.getDefaultPrefix();
-
-      let backdrop = (
-        <div ref="backdrop"
-          style={styles}
-          className={cn(prefix + '-backdrop', { in: this.props.show && !animate })}
-          onClick={e => this.handleBackdropClick(e)}
-        />
-      );
-
-      return (
-        <div>
-          { animate
-              ? <Fade transitionAppear in={this.props.show} duration={duration}>{backdrop}</Fade>
-              : backdrop
-          }
-          {modal}
         </div>
-      );
-    }
+      </div>
+    )
 
-    checkForFocus() {
-      let current = activeElement()
-        , focusInModal = current && contains(React.findDOMNode(this.refs.modal), current);
+    return (
+      <BaseModal
+        keyboard={keyboard}
+        backdrop={props.backdrop}
+        show={this.props.show}
+        onHide={this.props.onHide}
+        onEntering={this._show}
+        onExiting={this._removeAttentionClasses}
+        backdropStyle={backdrop}
+        backdropClassName={prefix + '-backdrop'}
+        containerClassName={prefix + '-open'}
+        transition={Fade}
+        dialogTransitionTimeout={Modal.TRANSITION_DURATION}
+        backdropTransitionTimeout={Modal.BACKDROP_TRANSITION_DURATION}
+      >
+        { modal }
+      </BaseModal>
+    )
+  }
 
-      if (this.props.autoFocus && !focusInModal) {
-        this.lastFocus = current;
-        this.focus();
-      }
-    }
+  attention(){
+    let { animate } = this.state
+      , classes = this.props.attentionAnimation + ' animated';
 
-    _focus(){
-      var el = React.findDOMNode(this)
+    if (!animate)
+      this.setState({ classes: '', animate: true }, ()=> {
 
-      if ( this.isTopModal() && el !== activeElement() && !contains(el, document.activeElement))
-        this.focus()
-    }
-
-    focus(){
-      React.findDOMNode(this.refs.modal).focus()
-    }
-
-    attention(){
-      this.setState({
-        attention: true,
-        classes:   ''
-      })
-
-      this.focus();
-    }
-
-    iosClickHack() {
-      React.findDOMNode(this.refs.modal).onclick = ()=>{};
-      React.findDOMNode(this.refs.backdrop).onclick = ()=>{};
-    }
-
-    isTopModal(){
-      return !!stack.length && stack[stack.length - 1] === this
-    }
-
-    handleBackdropClick(e) {
-      if (e.target !== e.currentTarget) return;
-      if (this.props.backdrop === 'static')
-        return this.attention()
-
-      this.props.onHide();
-    }
-
-    _styleBody(){
-      var padding = parseInt(css(document.body, 'padding-right') || 0, 10)
-
-      this._containerPadding = document.body.style.paddingRight || ''
-
-      if (this._bodyIsOverflowing)
-        css(document.body, { 'padding-right': `${padding + scrollbarWidth}px` })
-    }
-
-    _getStyles() {
-      if ( !canUseDOM )
-        return {}
-
-      var node = React.findDOMNode(this)
-        , scrollHt = node.scrollHeight
-        , bodyIsOverflowing = this._bodyIsOverflowing
-        , modalIsOverflowing = scrollHt > document.documentElement.clientHeight
-
-      return {
-        dialog: {
-          zIndex: getZIndex('modal'),
-          paddingRight: bodyIsOverflowing && !modalIsOverflowing ? scrollbarWidth : void 0,
-          paddingLeft:  !bodyIsOverflowing && modalIsOverflowing ? scrollbarWidth : void 0
-        },
-        backdrop: {
-          zIndex: getZIndex('backdrop')
+        if (this.props.show) {
+           // trigger reflow to allow animation
+          this.refs.dialog.offsetWidth
+          this.setState({ animate: false, classes })
         }
+      })
+  }
+
+
+  handleBackdropClick(e) {
+    if (e.target !== e.currentTarget) return;
+    if (this.props.backdrop === 'static')
+      return this.attention()
+
+    this.props.onHide();
+  }
+
+  _getStyles() {
+    if ( !canUseDOM )
+      return {}
+
+    var node = findDOMNode(this.refs.modal)
+      , doc = ownerDocument(node)
+      , scrollHt = node.scrollHeight
+      , bodyIsOverflowing = isOverflowing(this.props.container || doc.body)
+      , modalIsOverflowing = scrollHt > doc.documentElement.clientHeight
+
+    return {
+      dialog: {
+        zIndex: getZIndex('modal'),
+        paddingRight: bodyIsOverflowing && !modalIsOverflowing ? scrollbarWidth : void 0,
+        paddingLeft:  !bodyIsOverflowing && modalIsOverflowing ? scrollbarWidth : void 0
+      },
+      backdrop: {
+        zIndex: getZIndex('backdrop')
       }
     }
-
-    _removeAttentionClasses() {
-      var dialog  = React.findDOMNode(this.refs.dialog)
-        , classes = this.props.attentionAnimation + ' animated';
-
-      dialog.className = dialog.className.replace(classes, '')
-      dialog.offsetWidth
-    }
   }
 
-  // its easier to just wrap the whole component in another one for the Transition
-  // That way we don't need to do checks for is dialog mounted, etc in the above, simplifying the logic
-  return class ModalPortal extends React.Component {
-
-    static defaultProps = Modal.defaultProps
-
-    render() {
-      let { children, ...props } = this.props;
-
-      let getDialog = el => el.querySelectorAll(`.${PREFIX}-dialog`)[0];
-
-      let show = !!props.show;
-
-      let modal = (
-        <Modal {...props} ref='modal'>
-          { children }
-        </Modal>
-      );
-
-      return (
-        props.animate
-          ? (
-            <Fade
-              in={show}
-              transitioningNode={getDialog}
-              transitionAppear={show}
-              duration={Modal.TRANSITION_DURATION}
-              unmountOnExit
-            >
-              { modal }
-            </Fade>
-          )
-          : show && modal
-      );
-    }
+  _removeAttentionClasses() {
+    this.setState({ classes: '' })
   }
-})();
+}
 
 
-let ModalTrigger = createOverlay(props => <Modal {...props}>{ props.children }</Modal>)
 
-ModalTrigger.injectCSSPrefix = function(prefix) {
+Modal.injectCSSPrefix = function(prefix) {
   PREFIX = prefix;
 };
 
@@ -375,17 +242,15 @@ Header.getDefaultPrefix = getDefaultPrefix
 Title.getDefaultPrefix = getDefaultPrefix
 Footer.getDefaultPrefix = getDefaultPrefix
 
-ModalTrigger.Body = Body
-ModalTrigger.Header = Header
-ModalTrigger.Title = Title
-ModalTrigger.Footer = Footer
-ModalTrigger.Dismiss = Dismiss
+Modal.Body = Body
+Modal.Header = Header
+Modal.Title = Title
+Modal.Footer = Footer
+Modal.Dismiss = Dismiss
 
-ModalTrigger.BaseModal = Modal
+Modal.BaseModal = Modal
 
-ModalTrigger.TRANSITION_DURATION = 300;
-ModalTrigger.BACKDROP_TRANSITION_DURATION = 150;
+Modal.TRANSITION_DURATION = 300;
+Modal.BACKDROP_TRANSITION_DURATION = 150;
 
-
-
-module.exports = ModalTrigger
+export default Modal;

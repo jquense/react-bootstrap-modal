@@ -18,12 +18,8 @@ class Dismiss extends React.Component {
     component: 'button',
   }
 
-  // static contextTypes = {
-  //   onModalHide: React.PropTypes.func
-  // }
-
-  parentContext(){
-    return this._reactInternalInstance._context
+  static contextTypes = {
+    onModalHide: React.PropTypes.func
   }
 
   render() {
@@ -33,7 +29,7 @@ class Dismiss extends React.Component {
       , ...props } = this.props
 
     return (
-      <Tag {...props} onClick={chain(props.onClick, this.parentContext().onModalHide)}>
+      <Tag {...props} onClick={chain(props.onClick, this.context.onModalHide)}>
         { children }
       </Tag>
     );

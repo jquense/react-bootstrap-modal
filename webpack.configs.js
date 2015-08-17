@@ -83,7 +83,7 @@ function makeConfig(options){
     externals: options.externals,
 
     resolve: {
-      extensions: ['', '.js', '.jsx']
+      extensions: ['', '.js', '.jsx'],
     },
 
     module: {
@@ -119,7 +119,6 @@ module.exports = {
     },
 
     externals: {
-      react:  'window.React',
       'babel/browser': 'window.babel'
     },
 
@@ -133,7 +132,7 @@ module.exports = {
 
     devtool: 'source-map',
 
-    hot: true,
+    hot: false,
 
     extractStyles: false,
 
@@ -147,8 +146,6 @@ module.exports = {
     },
 
     externals: {
-      react: 'window.React',
-      'react/addons': 'window.React',
       'babel/browser': 'window.babel'
     },
 

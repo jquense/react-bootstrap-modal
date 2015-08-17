@@ -4,10 +4,10 @@
 
 
 var React = require('react')
+  , ReactDOM = require('react-dom')
   , EditableExample = require('./components/EditableExample');
 
 require('../src/less/rbm-patch.less')
-
 
 class Docs extends React.Component {
 
@@ -32,13 +32,4 @@ class Docs extends React.Component {
   }
 }
 
-var rootInstance = React.render(<Docs/>, document.body);
-
-if (module.hot) {
-  require('react-hot-loader/Injection').RootInstanceProvider.injectProvider({
-    getRootInstances: function () {
-      // Help React Hot Loader figure out the root component instances on the page:
-      return [rootInstance];
-    }
-  });
-}
+var rootInstance = ReactDOM.render(<Docs/>, document.getElementById('app-mount'));
