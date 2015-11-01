@@ -12,7 +12,7 @@ class NestedModal extends React.Component {
     var close = () => this.setState({ open: false })
 
     return (
-      <Modal show={this.props.show} onHide={this.props.onHide}>
+      <Modal show={this.props.show} onHide={this.props.onHide} small={this.props.small}>
         <Modal.Body>
           <h4>This Modal can open another modal</h4>
 
@@ -20,17 +20,22 @@ class NestedModal extends React.Component {
             Modal Inception
           </button>
 
-          <NestedModal show={this.state.open} onHide={close} />
+          <NestedModal show={this.state.open} onHide={close} small />
 
         </Modal.Body>
         <Modal.Footer>
-          <Modal.Dismiss className='btn btn-default'>Close</Modal.Dismiss>
+          <button
+            className='btn btn-default'
+            onHide={close}
+          >
+            Close
+          </button>
         </Modal.Footer>
       </Modal>
     )
   }
 }
-  
+
 class Stackable extends React.Component {
 
   constructor(){
@@ -46,19 +51,19 @@ class Stackable extends React.Component {
       <div>
         <NestedModal show={this.state.open} onHide={close}/>
 
-        <button 
-          className='btn btn-primary' 
+        <button
+          className='btn btn-primary'
           onClick={() => this.setState({ open: true }) }
         >
           Open Modal
         </button>
- 
+
       </div>
     )
   }
 }
 
-React.render(<Stackable/>, mountNode)
+ReactDOM.render(<Stackable/>, mountNode)
 `
 
 return code

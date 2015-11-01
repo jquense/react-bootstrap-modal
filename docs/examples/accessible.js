@@ -14,9 +14,9 @@ class Static extends React.Component {
 
     return (
       <div>
-        <Modal 
-          aria-labelledby='ModalTitle' 
-          show={this.state.open} 
+        <Modal
+          aria-labelledby='ModalTitle'
+          show={this.state.open}
           onHide={close}
         >
           <Modal.Header>
@@ -31,8 +31,8 @@ class Static extends React.Component {
           </Modal.Footer>
         </Modal>
 
-        <button 
-          className='btn btn-primary' 
+        <button
+          className='btn btn-primary'
           onClick={() => this.setState({ open: true }) }
         >
           Open Modal
@@ -42,7 +42,7 @@ class Static extends React.Component {
   }
 }
 
-React.render(<Static/>, mountNode)
+ReactDOM.render(<Static/>, mountNode)
 `
 
 return code
