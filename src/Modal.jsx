@@ -13,6 +13,7 @@ import Footer from './Footer';
 import Dismiss from './Dismiss';
 
 import ownerDocument from 'dom-helpers/ownerDocument';
+import canUseDOM from 'dom-helpers/util/inDOM';
 import contains from 'dom-helpers/query/contains';
 import classes from 'dom-helpers/class';
 import events from 'dom-helpers/events';
@@ -24,25 +25,6 @@ var baseIndex = {};
 var PREFIX = 'modal';
 
 var getZIndex;
-
-class ModalContent extends React.Component {
-
-  static childContextTypes = {
-    onModalHide: React.PropTypes.func
-  }
-
-  getChildContext(){
-    return this._context || (this._context = { onModalHide: this.props.onHide })
-  }
-
-  render() {
-    return (
-      <div {...this.props}>
-        { this.props.children }
-      </div>
-    );
-  }
-}
 
 
 class Modal extends React.Component {
