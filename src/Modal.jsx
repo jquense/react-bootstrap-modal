@@ -25,7 +25,6 @@ var PREFIX = 'modal';
 
 var getZIndex;
 
-
 class Modal extends React.Component {
 
   static getDefaultPrefix(){
@@ -38,6 +37,7 @@ class Modal extends React.Component {
     backdrop: React.PropTypes.oneOf(['static', true, false]),
     keyboard: React.PropTypes.bool,
     animate:  React.PropTypes.bool,
+    transition: React.PropTypes.any,
     onHide:   React.PropTypes.func,
 
     modalPrefix: React.PropTypes.string,
@@ -48,6 +48,7 @@ class Modal extends React.Component {
     backdrop:           true,
     keyboard:           true,
     animate:            true,
+    transition:         true,
     attentionAnimation: 'shake',
   }
 
@@ -104,6 +105,7 @@ class Modal extends React.Component {
         className
       , children
       , keyboard
+      , transition
       , ...props } = this.props
       , {
         dialog
@@ -111,11 +113,14 @@ class Modal extends React.Component {
 
     let prefix = this.props.modalPrefix || Modal.getDefaultPrefix();
 
+    if (transition === true)
+      transition = Fade;
+
     let modal = (
       <div {...props}
         ref={r => this.dialog = r }
         style={dialog}
-        className={cn(className, prefix)}
+        className={cn(className, prefix, { in: props.show && !transition })}
         onClick={this.props.backdrop ? e => this.handleBackdropClick(e) : null}
       >
         <div
@@ -145,14 +150,14 @@ class Modal extends React.Component {
           this.backdrop = (ref && ref.refs.backdrop);
         }}
         backdrop={props.backdrop}
-        show={this.props.show}
+        show={props.show}
         onHide={this.props.onHide}
         onEntering={this._show}
         onExiting={this._removeAttentionClasses}
         backdropStyle={backdrop}
         backdropClassName={prefix + '-backdrop'}
         containerClassName={prefix + '-open'}
-        transition={Fade}
+        transition={transition}
         dialogTransitionTimeout={Modal.TRANSITION_DURATION}
         backdropTransitionTimeout={Modal.BACKDROP_TRANSITION_DURATION}
       >
