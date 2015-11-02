@@ -1,6 +1,5 @@
 import React  from 'react';
 import { findDOMNode } from 'react-dom';
-import canUseDOM from 'dom-helpers/util/inDOM';
 
 import BaseModal from 'react-overlays/lib/Modal';
 import isOverflowing from 'react-overlays/lib/utils/isOverflowing';
@@ -114,14 +113,14 @@ class Modal extends React.Component {
 
     let modal = (
       <div {...props}
-        ref='modal'
+        ref={r => this.dialog = r }
         style={dialog}
         className={cn(className, prefix)}
         onClick={this.props.backdrop ? e => this.handleBackdropClick(e) : null}
       >
         <div
           key='modal'
-          ref='dialog'
+          ref='inner'
           className={cn(
               prefix + '-dialog'
             , this.props.dialogClassName
@@ -141,6 +140,10 @@ class Modal extends React.Component {
     return (
       <BaseModal
         keyboard={keyboard}
+        ref={ref => {
+          this.modal = (ref && ref.refs.modal);
+          this.backdrop = (ref && ref.refs.backdrop);
+        }}
         backdrop={props.backdrop}
         show={this.props.show}
         onHide={this.props.onHide}
@@ -167,7 +170,7 @@ class Modal extends React.Component {
 
         if (this.props.show) {
            // trigger reflow to allow animation
-          this.refs.dialog.offsetWidth
+          this.refs.inner.offsetWidth
           this.setState({ animate: false, classes })
         }
       })
@@ -186,7 +189,7 @@ class Modal extends React.Component {
     if ( !canUseDOM )
       return {}
 
-    var node = findDOMNode(this.refs.modal)
+    var node = findDOMNode(this.dialog)
       , doc = ownerDocument(node)
       , scrollHt = node.scrollHeight
       , bodyIsOverflowing = isOverflowing(this.props.container || doc.body)

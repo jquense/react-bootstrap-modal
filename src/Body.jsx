@@ -1,6 +1,5 @@
-
-var React = require('react');
-var cn = require('classnames');
+import React from 'react';
+import cn from 'classnames';
 
 class ModalBody extends React.Component {
 

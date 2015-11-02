@@ -1,9 +1,7 @@
-
-module.exports = function(){
-  var code = `
 class Static extends React.Component {
 
   constructor(){
+    super()
     this.state = {
       open: false
     }
@@ -43,7 +41,3 @@ class Static extends React.Component {
 }
 
 ReactDOM.render(<Static/>, mountNode)
-`
-
-return code
-}

@@ -18,68 +18,54 @@
     "bootstrap"
   ],
   "scripts": {
-    "test": "karma start --single-run"
-  },
-  "babel": {
-    "experimental": true,
-    "playground": true,
-    "loose": [
-      "all"
-    ],
-    "whitelist": [
-      "es6.classes",
-      "es6.modules",
-      "es6.blockScoping",
-      "es6.arrowFunctions",
-      "es6.spread",
-      "es6.properties.computed",
-      "es6.properties.shorthand",
-      "es6.parameters.default",
-      "es6.parameters.rest",
-      "es6.templateLiterals",
-      "es7.objectRestSpread",
-      "react"
-    ]
+    "test": "karma start --single-run",
+    "tdd": "karma start",
+    "clean": "rimraf lib/*",
+    "less": "lessc -x src/less/rbm-complete.less lib/styles/rbm-complete.css & lessc -x src/less/rbm-patch.less lib/styles/rbm-patch.css",
+    "copy": "cpy src/less/* lib/styles",
+    "build": "npm run clean && babel src --out-dir lib && npm run less & npm run copy",
+    "build:docs": "webpack --config ./webpack/doc-config.es6.js",
+    "docs": "webpack-dev-server --config ./webpack/doc-config.es6.js"
   },
   "peerDependencies": {
-    "react": ">=0.14.0-alpha",
-    "react-dom": ">=0.14.0-alpha"
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0"
   },
   "devDependencies": {
-    "babel": "^4.7.2",
-    "babel-loader": "^4.0.0",
+    "@jquense/component-playground": "jquense/component-playground",
+    "babel": "^5.8.29",
+    "babel-loader": "^5.0.0",
     "chai": "^1.10.0",
     "chai-as-promised": "^4.1.1",
+    "cpy": "^3.4.1",
     "css-loader": "^0.9.1",
+    "eslint": "^0.24.1",
     "extract-text-webpack-plugin": "^0.4.0",
-    "gulp": "^3.8.10",
-    "gulp-babel-helpers": "^1.1.2",
-    "gulp-less": "^3.0.0",
-    "gulp-plumber": "^0.6.6",
-    "gulp-rename": "^1.2.2",
     "imports-loader": "^0.6.3",
     "json-loader": "^0.5.1",
-    "karma": "~0.12.23",
+    "karma": "^0.13.14",
+    "karma-jsdom-launcher": "^1.0.0",
     "karma-mocha": "~0.1.9",
     "karma-mocha-reporter": "^0.3.1",
-    "karma-phantomjs-launcher": "~0.1.4",
+    "karma-sinon-chai": "^1.1.0",
     "karma-sourcemap-loader": "^0.3.2",
-    "karma-webpack": "~1.2.2",
+    "karma-webpack": "^1.7.0",
+    "less": "^2.5.3",
     "less-loader": "^2.0.0",
-    "merge-stream": "^0.1.7",
     "mocha": "~1.21.4",
-    "phantomjs": "~1.9.10",
-    "react": "^0.14.0-beta1",
-    "rimraf": "^2.2.8",
+    "raw-loader": "^0.5.1",
+    "react": "^0.14.0",
+    "rimraf": "^2.4.3",
     "simulant": "^0.1.3",
     "sinon-chai": "^2.6.0",
     "style-loader": "^0.8.3",
-    "webpack": "^1.4.15",
-    "webpack-dev-server": "^1.7.0"
+    "teaspoon": "^5.0.0",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.1"
   },
   "dependencies": {
     "classnames": "^1.1.4",
     "dom-helpers": "^2.2.4",
-    "react-overlays": "react-0.14"
+    "react-overlays": "^0.5.0"
   }
 }

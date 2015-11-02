@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 
 let chain = (a,b) => (...args) => {
   a && a(...args)

@@ -1,8 +1,7 @@
 
-module.exports = function(){
-  var code = `
 class NestedModal extends React.Component {
   constructor(){
+    super()
     this.state = {
       open: false
     }
@@ -19,17 +18,14 @@ class NestedModal extends React.Component {
           <button onClick={() => this.setState({ open: true }) }>
             Modal Inception
           </button>
-
           <NestedModal show={this.state.open} onHide={close} small />
-
         </Modal.Body>
         <Modal.Footer>
-          <button
+          <Modal.Dismiss
             className='btn btn-default'
-            onHide={close}
           >
             Close
-          </button>
+          </Modal.Dismiss>
         </Modal.Footer>
       </Modal>
     )
@@ -39,6 +35,7 @@ class NestedModal extends React.Component {
 class Stackable extends React.Component {
 
   constructor(){
+    super()
     this.state = {
       open: false
     }
@@ -64,7 +61,3 @@ class Stackable extends React.Component {
 }
 
 ReactDOM.render(<Stackable/>, mountNode)
-`
-
-return code
-}

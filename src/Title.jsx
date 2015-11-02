@@ -1,5 +1,5 @@
-var React = require('react')
-var cn = require('classnames');
+import React from 'react';
+import cn from 'classnames';
 
 class ModalTitle extends React.Component {
 

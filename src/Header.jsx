@@ -1,6 +1,6 @@
-var React = require('react')
-  , cn = require('classnames')
-  , Dismiss = require('./Dismiss');
+import React from 'react';
+import cn from 'classnames';
+import Dismiss from './Dismiss';
 
 class ModalHeader extends React.Component {
 
