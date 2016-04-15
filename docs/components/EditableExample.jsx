@@ -4,7 +4,7 @@
 var React = require('react')
   , ReactDOM = require('react-dom')
   , Modal = require('../../src/Modal')
-  , Playground = require('@jquense/component-playground');
+  , Playground = require('@monastic.panic/component-playground/Playground');
 
 var scope = { Modal, React, ReactDOM }
 
@@ -13,9 +13,8 @@ module.exports = React.createClass({
     return (
       <Playground
         {...this.props}
-        mode='text/jsx'
+        mode='jsx'
         theme='oceanicnext'
-        babelConfig={{ stage: 0 }}
         scope={scope}
       />
     );

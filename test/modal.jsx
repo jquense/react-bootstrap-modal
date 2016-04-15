@@ -112,11 +112,11 @@ describe('Modal', () => {
 
       inst = $(<Modal.Dismiss component='span'/>).shallowRender();
 
-      inst[0].type.should.equal('span')
+      inst.children()[0].type.should.equal('span')
 
       inst = $(<Modal.Dismiss component={Button}/>).shallowRender();
 
-      inst[0].type.should.equal(Button)
+      inst.children()[0].type.should.equal(Button)
     })
   })
 })

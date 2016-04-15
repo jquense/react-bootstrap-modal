@@ -3,6 +3,8 @@ var React = require('react')
   , ReactDOM = require('react-dom')
   , EditableExample = require('./components/EditableExample');
 
+require('@monastic.panic/component-playground/codemirror.css')
+require('@monastic.panic/component-playground/themes/oceanic.css')
 require('../src/less/rbm-patch.less')
 
 class Docs extends React.Component {
