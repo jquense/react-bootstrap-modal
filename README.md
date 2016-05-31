@@ -72,9 +72,10 @@ The main Modal Component.
 - `show`: `Boolean(default false)` make the Modal visible or hidden
 - `backdrop`: `Enum<'static', true, false>(default true)` - Should the modal render a backdrop overlay. `"static"` backdrops are not dismissable by clicking the backdrop.
 
-- `animate`: `Boolean(default true)` - animate the entry and exit of the modal
+- `animate`: `Boolean(default true)` enables/disables the attention animation when using static backdrop
+- `transition` `Boolean(default true)` animate the entry and exit of the modal
 - `attentionAnimation`: `String(default 'shake')` - an animation class added to the modal when a "static" backdrop is clicked
-- `keyboard`: `Boolean(default true)` - Modal is dismissable via the `esc` key
+- `keyboard`: `Boolean(default true)` Modal is dismissable via the `esc` key
 - `onTransitionIn`: handler fires as the Modal starts entering
 - `onTransitionedIn`: handler fires after the enter animation finishes
 - `onTransitionOut`: handler fires as the Modal starts exiting
