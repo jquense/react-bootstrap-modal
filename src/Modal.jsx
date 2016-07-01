@@ -40,6 +40,11 @@ class Modal extends React.Component {
     transition: React.PropTypes.any,
     onHide:   React.PropTypes.func,
 
+    onTransitionIn: React.PropTypes.func,
+    onTransitionedIn: React.PropTypes.func,
+    onTransitionOut: React.PropTypes.func,
+    onTransitionedOut: React.PropTypes.func,
+
     modalPrefix: React.PropTypes.string,
     dialogClassName: React.PropTypes.string,
   }
@@ -62,9 +67,10 @@ class Modal extends React.Component {
 
   constructor(){
     super()
-    this._show = this._show.bind(this)
-    this._removeAttentionClasses = this._removeAttentionClasses.bind(this)
 
+    this._entering = this._entering.bind(this)
+    this._exiting  = this._exiting.bind(this)
+    
     this.state = {
       classes: ''
     }
@@ -98,6 +104,20 @@ class Modal extends React.Component {
   _show(prevProps) {
     if (this.props.show)
       this.setState(this._getStyles())
+  }
+
+  _entering(...args) {
+    this._show(...args);
+    if ( this.props.onTransitionIn ) {
+      this.props.onTransitionIn()
+    }
+  }
+
+  _exiting() {
+    this._removeAttentionClasses()
+    if ( this.props.onTransitionOut ) {
+      this.props.onTransitionOut();
+    }
   }
 
   render() {
@@ -152,8 +172,10 @@ class Modal extends React.Component {
         backdrop={props.backdrop}
         show={props.show}
         onHide={this.props.onHide}
-        onEntering={this._show}
-        onExiting={this._removeAttentionClasses}
+        onEntering={this._entering}
+        onExiting={this._exiting}
+	onEnter={this.props.onTransitionedIn}
+	onExit={this.props.onTransitionedOut}
         backdropStyle={backdrop}
         backdropClassName={prefix + '-backdrop'}
         containerClassName={prefix + '-open'}
