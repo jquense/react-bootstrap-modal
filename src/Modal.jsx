@@ -3,6 +3,7 @@ import { findDOMNode } from 'react-dom';
 
 import BaseModal from 'react-overlays/lib/Modal';
 import isOverflowing from 'react-overlays/lib/utils/isOverflowing';
+import componentOrElement from 'react-prop-types/lib/componentOrElement';
 
 import Fade from './Fade';
 import Body   from './Body';
@@ -32,14 +33,15 @@ class Modal extends React.Component {
   }
 
   static propTypes = {
-    show:     React.PropTypes.bool,
+    show: React.PropTypes.bool,
 
     backdrop: React.PropTypes.oneOf(['static', true, false]),
     keyboard: React.PropTypes.bool,
-    animate:  React.PropTypes.bool,
+    animate: React.PropTypes.bool,
     transition: React.PropTypes.any,
-    onHide:   React.PropTypes.func,
+    container: React.PropTypes.oneOfType([componentOrElement, React.PropTypes.func]),
 
+    onHide: React.PropTypes.func,
     onTransitionIn: React.PropTypes.func,
     onTransitionedIn: React.PropTypes.func,
     onTransitionOut: React.PropTypes.func,
@@ -54,6 +56,7 @@ class Modal extends React.Component {
     keyboard:           true,
     animate:            true,
     transition:         true,
+    container:          document.body,
     attentionAnimation: 'shake',
   }
 
@@ -70,7 +73,7 @@ class Modal extends React.Component {
 
     this._entering = this._entering.bind(this)
     this._exiting  = this._exiting.bind(this)
-    
+
     this.state = {
       classes: ''
     }
@@ -169,13 +172,14 @@ class Modal extends React.Component {
           this.modal = (ref && ref.refs.modal);
           this.backdrop = (ref && ref.refs.backdrop);
         }}
+        container={this.props.container}
         backdrop={props.backdrop}
         show={props.show}
         onHide={this.props.onHide}
         onEntering={this._entering}
         onExiting={this._exiting}
-	onEnter={this.props.onTransitionedIn}
-	onExit={this.props.onTransitionedOut}
+      	onEnter={this.props.onTransitionedIn}
+      	onExit={this.props.onTransitionedOut}
         backdropStyle={backdrop}
         backdropClassName={prefix + '-backdrop'}
         containerClassName={prefix + '-open'}
