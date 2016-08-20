@@ -18,13 +18,24 @@ class ModalHeader extends React.Component {
     onModalHide: React.PropTypes.func
   }
 
+  constructor() {
+    super();
+    this._removeUnknownDivProps = this._removeUnknownDivProps.bind(this)
+  }
+
+  _removeUnknownDivProps(props) {
+    const {closeButton, ...attrs} = props;
+    return attrs;
+  }
 
   render() {
     var prefix = this.props.modalPrefix || ModalHeader.getDefaultPrefix();
 
+    const headerAttr = this._removeUnknownDivProps(this.props);
+
     return (
-      <div
-        {...this.props}
+      <div {...headerAttr}
+        data-closeButton={this.props.closeButton}
         className={cn(this.props.className,  prefix + '-header')}
       >
         { this.props.closeButton &&
