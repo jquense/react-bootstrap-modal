@@ -123,6 +123,23 @@ class Modal extends React.Component {
     }
   }
 
+  _removeUnknownDivProps(props) {
+    const {
+      show
+      , animate
+      , container
+      , attentionAnimation
+      , backdrop
+      , small
+      , sm
+      , large
+      , lg
+      , onHide
+      , ...attrs } = props;
+
+    return attrs;
+  }
+
   render() {
     var {
         className
@@ -136,11 +153,13 @@ class Modal extends React.Component {
 
     let prefix = this.props.modalPrefix || Modal.getDefaultPrefix();
 
+    const modalAttrs = this._removeUnknownDivProps(props);
+
     if (transition === true)
       transition = Fade;
 
     let modal = (
-      <div {...props}
+      <div {...modalAttrs}
         ref={r => this.dialog = r }
         style={dialog}
         className={cn(className, prefix, { in: props.show && !transition })}
