@@ -18,11 +18,6 @@ class ModalHeader extends React.Component {
     onModalHide: React.PropTypes.func
   }
 
-  constructor() {
-    super();
-    this._removeUnknownDivProps = this._removeUnknownDivProps.bind(this)
-  }
-
   _removeUnknownDivProps(props) {
     const {closeButton, ...attrs} = props;
     return attrs;

@@ -73,7 +73,6 @@ class Modal extends React.Component {
 
     this._entering = this._entering.bind(this)
     this._exiting  = this._exiting.bind(this)
-    this._removeUnknownDivProps = this._removeUnknownDivProps.bind(this)
 
     this.state = {
       classes: ''
