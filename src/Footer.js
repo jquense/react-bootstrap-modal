@@ -3,16 +3,17 @@ import cn from 'classnames';
 
 class ModalFooter extends React.Component {
 
-  static getDefaultPrefix(){
+  static getDefaultPrefix() {
     return 'modal'
   }
 
   render() {
-    var prefix = this.props.modalPrefix || ModalFooter.getDefaultPrefix();
+    let { modalPrefix, children, className, ...props } = this.props;
+    let prefix = modalPrefix || ModalFooter.getDefaultPrefix();
 
     return (
-      <div {...this.props} className={cn(this.props.className, prefix + '-footer')}>
-        {this.props.children}
+      <div {...props} className={cn(className, prefix + '-footer')}>
+        {children}
       </div>
     );
   }
@@ -26,4 +27,4 @@ ModalFooter.propTypes = {
 };
 
 
-module.exports = ModalFooter
+export default ModalFooter

@@ -11,13 +11,10 @@ class Fade extends React.Component {
     return (
       <Transition
         {...this.props}
-        in={this.props.in}
         className='fade'
         enteredClassName='in'
         enteringClassName='in'
-      >
-        { this.props.children }
-      </Transition>
+      />
     );
   }
 }

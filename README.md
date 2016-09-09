@@ -1,7 +1,7 @@
 React Bootstrap Modal
 ===================================
 
-Partly a port of [jschr's bootstrap modal](https://github.com/jschr/bootstrap-modal/). Reimplements the Twitter Bootstrap Modal component in a React friendly way. Based on the orginal work of the react-bootstrap team.
+Partly a port of [jschr's bootstrap modal](https://github.com/jschr/bootstrap-modal/). Reimplements the Twitter Bootstrap Modal component in a React friendly way. Based on the original work of the react-bootstrap team.
 
 __note__: React bootstrap modal is compatible with bootstrap __3.3.4+__ if you want to use it with an earlier version of bootstrap 3 you need to override the `.modal-backdrop` styles to be the most recent one.
 
@@ -31,8 +31,8 @@ class ModalExample extends React.Component {
       <div>
         <button type='button'>Launch modal</button>
 
-        <Modal 
-          show={this.state.open} 
+        <Modal
+          show={this.state.open}
           onHide={closeModal}
           aria-labelledby="ModalHeader"
         >
@@ -43,8 +43,8 @@ class ModalExample extends React.Component {
             <p>Some Content here</p>
           </Modal.Body>
           <Modal.Footer>
-            // If you don't have anything fancy to do you can use 
-            // the convenient `Dismiss` component, it will 
+            // If you don't have anything fancy to do you can use
+            // the convenient `Dismiss` component, it will
             // trigger `onHide` when clicked
             <Modal.Dismiss className='btn btn-default'>Cancel</Modal.Dismiss>
 
@@ -70,17 +70,20 @@ The main Modal Component.
 #### Props
 
 - `show`: `Boolean(default false)` make the Modal visible or hidden
-- `backdrop`: `Enum<'static', true, false>(default true)` - Should the modal render a backdrop overlay. `"static"` backdrops are not dismissable by clicking the backdrop.
+- `backdrop`: `Enum<'static', true, false>(default true)` - Should the modal render a backdrop overlay. `"static"` backdrops are not dismissible by clicking the backdrop.
+- `keyboard`: `Boolean(default true)` Modal is dismissible via the `esc` key
 
-- `animate`: `Boolean(default true)` enables/disables the attention animation when using static backdrop
-- `transition` `Boolean(default true)` animate the entry and exit of the modal
-- `attentionAnimation`: `String(default 'shake')` - an animation class added to the modal when a "static" backdrop is clicked
-- `keyboard`: `Boolean(default true)` Modal is dismissable via the `esc` key
-- `onTransitionIn`: handler fires as the Modal starts entering
-- `onTransitionedIn`: handler fires after the enter animation finishes
-- `onTransitionOut`: handler fires as the Modal starts exiting
-- `onTransitionedOut`: handler fires after the exit animation finishes
+- `transition` `Boolean(default true)` Fade the entry and exit of the modal. You can also provide a
+Transition component from the `react-overlays` library to customize the animation more minutely.
+- `attentionClass`: `String(default 'shake')` - an animation class added to the modal when a "static" backdrop is clicked, set to nothing if
+no animation is desired
 - `container`: `Node(default document.body)`, a DOM Node to append the modal too
+- `onEnter`: handler fires right before the Modal animates in
+- `onEntering`: handler fires as the Modal starts entering
+- `onEntered`: handler fires after the enter animation finishes
+- `onExit`: handler fires right before the Modal animates out
+- `onExiting`: handler fires as the Modal starts exiting
+- `onExited`: handler fires after the exit animation finishes
 
 ### `Modal.Header`
 
@@ -102,19 +105,14 @@ The bottom footer of the Modal, a convenience Component for: `<div className='mo
 
 ### `Modal.Dismiss`
 
-A dismiss button for the Parent Modal. `Dismiss` button will trigger its parent Modal `onHide()` handler. You don't need to use a Dismiss button, they are jsut a Convenience Component.
-  
+A dismiss button for the Parent Modal. `Dismiss` button will trigger its parent Modal `onHide()` handler. You don't need to use a Dismiss button, they are just a Convenience Component.
+
 ### `Modal.BaseModal`
 
 BaseModal represents just the modal markup without any of the logic to render it to the `document.body`. It is generally not recommended that you work with this component directly. You can use it if you really want to render a Modal inline.
 
 ## Styles
 
-You can use this module seperate from Twitter Bootstrap by just including the `/lib/styles/rbm-complete.css` file, or if you are using bootstrap and don't want to re-include styles you can just use `/lib/styles/rbm-patch.css`.
+You can use this module separate from Twitter Bootstrap by just including the `/lib/styles/rbm-complete.css` file, or if you are using bootstrap and don't want to re-include styles you can just use `/lib/styles/rbm-patch.css`.
 
 If you don't like the bootstrap visual look and feel, you can adjust `variables.less` to suit your needs.
-
-
-### 'Warning: owner-based and parent-based contexts differ`
-
-I know. It's fine. Really, nothing is wrong here. I wish I could make the cwarning go away, but instead we have to wait until react `0.14`

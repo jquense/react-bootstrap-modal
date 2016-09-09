@@ -1,6 +1,6 @@
 import React from 'react';
 
-let chain = (a,b) => (...args) => {
+let chain = (a, b) => (...args) => {
   a && a(...args)
   b && b(...args)
 }
@@ -9,9 +9,9 @@ class Dismiss extends React.Component {
 
   static propTypes = {
     component:  React.PropTypes.oneOfType([
-                  React.PropTypes.string,
-                  React.PropTypes.func
-                ])
+      React.PropTypes.string,
+      React.PropTypes.func
+    ])
   }
 
   static defaultProps = {
@@ -29,11 +29,14 @@ class Dismiss extends React.Component {
       , ...props } = this.props
 
     return (
-      <Tag {...props} onClick={chain(props.onClick, this.context.onModalHide)}>
+      <Tag
+        {...props}
+        onClick={chain(props.onClick, this.context.onModalHide)}
+      >
         { children }
       </Tag>
     );
   }
 }
 
-module.exports = Dismiss
+export default Dismiss

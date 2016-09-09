@@ -14,26 +14,35 @@ import Dismiss from './Dismiss';
 
 import ownerDocument from 'dom-helpers/ownerDocument';
 import canUseDOM from 'dom-helpers/util/inDOM';
-import contains from 'dom-helpers/query/contains';
-import classes from 'dom-helpers/class';
-import events from 'dom-helpers/events';
 import scrollbarWidth from 'dom-helpers/util/scrollbarSize';
 import css from 'dom-helpers/style';
 import cn from 'classnames';
 
-var baseIndex = {};
-var PREFIX = 'modal';
+let baseIndex = {};
+let PREFIX = 'modal';
 
-var getZIndex;
+let getZIndex;
+
+let omit = (obj, keys) => Object.keys(obj).reduce((o, key) => {
+  if (keys.indexOf(key) === -1) o[key] = obj[key]
+  return o;
+}, {});
 
 class Modal extends React.Component {
 
-  static getDefaultPrefix(){
+  static getDefaultPrefix() {
     return PREFIX
   }
 
   static propTypes = {
     show: React.PropTypes.bool,
+
+    /** sizes **/
+    small: React.PropTypes.bool,
+    sm: React.PropTypes.bool,
+    large: React.PropTypes.bool,
+    lg: React.PropTypes.bool,
+    /** --- **/
 
     backdrop: React.PropTypes.oneOf(['static', true, false]),
     keyboard: React.PropTypes.bool,
@@ -42,13 +51,16 @@ class Modal extends React.Component {
     container: React.PropTypes.oneOfType([componentOrElement, React.PropTypes.func]),
 
     onHide: React.PropTypes.func,
-    onTransitionIn: React.PropTypes.func,
-    onTransitionedIn: React.PropTypes.func,
-    onTransitionOut: React.PropTypes.func,
-    onTransitionedOut: React.PropTypes.func,
+    onEnter: React.PropTypes.func,
+    onEntering: React.PropTypes.func,
+    onEntered: React.PropTypes.func,
+    onExit: React.PropTypes.func,
+    onExiting: React.PropTypes.func,
+    onExited: React.PropTypes.func,
 
     modalPrefix: React.PropTypes.string,
     dialogClassName: React.PropTypes.string,
+    attentionClass: React.PropTypes.string,
   }
 
   static defaultProps = {
@@ -57,7 +69,7 @@ class Modal extends React.Component {
     animate:            true,
     transition:         true,
     container:          document.body,
-    attentionAnimation: 'shake',
+    attentionClass: 'shake',
   }
 
   static childContextTypes = {
@@ -71,8 +83,8 @@ class Modal extends React.Component {
   constructor(){
     super()
 
-    this._entering = this._entering.bind(this)
-    this._exiting  = this._exiting.bind(this)
+    this.handleEntering = this.handleEntering.bind(this)
+    this.handleExiting  = this.handleExiting.bind(this)
 
     this.state = {
       classes: ''
@@ -81,8 +93,8 @@ class Modal extends React.Component {
 
   componentDidMount() {
     getZIndex = getZIndex || (function () {
-      var modal = document.createElement("div")
-        , backdrop = document.createElement("div")
+      let modal = document.createElement('div')
+        , backdrop = document.createElement('div')
         , zIndexFactor;
 
       modal.className = 'modal hide'
@@ -98,49 +110,50 @@ class Modal extends React.Component {
       document.body.removeChild(modal)
       document.body.removeChild(backdrop)
 
-      return function (type) {
-        return baseIndex[type] + (zIndexFactor * (BaseModal.manager.modals.length - 1));
-      }
+      return (type) => baseIndex[type] + (zIndexFactor * (BaseModal.manager.modals.length - 1));
     }())
   }
 
-  _show(prevProps) {
-    if (this.props.show)
-      this.setState(this._getStyles())
-  }
-
-  _entering(...args) {
+  handleEntering(...args) {
     this._show(...args);
-    if ( this.props.onTransitionIn ) {
-      this.props.onTransitionIn()
+
+    if (this.props.onEntering) {
+      this.props.onEntering()
     }
   }
 
-  _exiting() {
+  handleExiting() {
     this._removeAttentionClasses()
-    if ( this.props.onTransitionOut ) {
-      this.props.onTransitionOut();
+    if (this.props.onExiting) {
+      this.props.onExiting();
     }
   }
 
   render() {
-    var {
+    let {
         className
       , children
       , keyboard
       , transition
+      , modalPrefix
+      , dialogClassName
+      , container
+      , onEnter, onEntered
+      , onExit, onExited
       , ...props } = this.props
-      , {
-        dialog
-      , backdrop } = this.state;
 
-    let prefix = this.props.modalPrefix || Modal.getDefaultPrefix();
+    let { dialog, classes, backdrop } = this.state;
+
+    let elementProps = omit(props, Object.keys(Modal.propTypes))
+
+    let prefix = modalPrefix || Modal.getDefaultPrefix();
 
     if (transition === true)
       transition = Fade;
 
     let modal = (
-      <div {...props}
+      <div
+        {...elementProps}
         ref={r => this.dialog = r }
         style={dialog}
         className={cn(className, prefix, { in: props.show && !transition })}
@@ -151,11 +164,10 @@ class Modal extends React.Component {
           ref='inner'
           className={cn(
               prefix + '-dialog'
-            , this.props.dialogClassName
-            , this.state.classes, {
-              [prefix + '-sm']: props.small || props.sm,
-              [prefix + '-lg']: props.large || props.lg,
-            }
+            , dialogClassName
+            , classes
+            , (props.small || props.sm) && `${prefix}-sm`
+            , (props.large || props.lg) && `${prefix}-lg`
           )}
         >
           <div className={prefix + '-content' }>
@@ -172,14 +184,16 @@ class Modal extends React.Component {
           this.modal = (ref && ref.refs.modal);
           this.backdrop = (ref && ref.refs.backdrop);
         }}
-        container={this.props.container}
+        container={container}
         backdrop={props.backdrop}
         show={props.show}
         onHide={this.props.onHide}
-        onEntering={this._entering}
-        onExiting={this._exiting}
-      	onEnter={this.props.onTransitionedIn}
-      	onExit={this.props.onTransitionedOut}
+        onEnter={onEnter}
+        onEntering={this.handleEntering}
+        onEntered={onEntered}
+        onExit={onExit}
+        onExiting={this.handleExiting}
+        onExited={onExited}
         backdropStyle={backdrop}
         backdropClassName={prefix + '-backdrop'}
         containerClassName={prefix + '-open'}
@@ -187,22 +201,22 @@ class Modal extends React.Component {
         dialogTransitionTimeout={Modal.TRANSITION_DURATION}
         backdropTransitionTimeout={Modal.BACKDROP_TRANSITION_DURATION}
       >
-        { modal }
+        {modal}
       </BaseModal>
     )
   }
 
-  attention(){
-    let { animate } = this.state
-      , classes = this.props.attentionAnimation + ' animated';
+  attention() {
+    let { attentionClass } = this.props;
 
-    if (!animate)
-      this.setState({ classes: '', animate: true }, ()=> {
-
+    if (attentionClass)
+      this.setState({ classes: '' }, ()=> {
         if (this.props.show) {
-           // trigger reflow to allow animation
+           // eslint-disable-next-line no-unused-expressions
           this.refs.inner.offsetWidth
-          this.setState({ animate: false, classes })
+          this.setState({
+            classes: attentionClass + ' animated',
+          })
         }
       })
   }
@@ -216,11 +230,16 @@ class Modal extends React.Component {
     this.props.onHide();
   }
 
+  _show() {
+    if (this.props.show)
+      this.setState(this._getStyles())
+  }
+
   _getStyles() {
-    if ( !canUseDOM )
+    if (!canUseDOM)
       return {}
 
-    var node = findDOMNode(this.dialog)
+    let node = findDOMNode(this.dialog)
       , doc = ownerDocument(node)
       , scrollHt = node.scrollHeight
       , bodyIsOverflowing = isOverflowing(this.props.container || doc.body)

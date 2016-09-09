@@ -1,6 +1,3 @@
-/*global JSXTransformer */
-'use strict';
-
 var React = require('react')
   , ReactDOM = require('react-dom')
   , Modal = require('../../src/Modal')
@@ -16,6 +13,9 @@ module.exports = React.createClass({
         mode='jsx'
         theme='oceanicnext'
         scope={scope}
+        babelConfig={{
+          presets: ['es2015', 'react', 'stage-0']
+        }}
       />
     );
   }

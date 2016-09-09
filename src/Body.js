@@ -8,11 +8,12 @@ class ModalBody extends React.Component {
   }
 
   render() {
-    var prefix = this.props.modalPrefix || ModalBody.getDefaultPrefix();
+    let { modalPrefix, children, className, ...props } = this.props;
+    let prefix = modalPrefix || ModalBody.getDefaultPrefix();
 
     return (
-      <div {...this.props} className={cn(this.props.className,  prefix + '-body')}>
-        {this.props.children}
+      <div {...props} className={cn(className,  prefix + '-body')}>
+        {children}
       </div>
     )
   }
@@ -26,4 +27,4 @@ ModalBody.propTypes = {
   modalPrefix: React.PropTypes.string
 };
 
-module.exports = ModalBody
+export default ModalBody
