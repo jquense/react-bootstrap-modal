@@ -92,7 +92,7 @@ class Modal extends React.Component {
   }
 
   componentDidMount() {
-    getZIndex = getZIndex || (function () {
+    getZIndex = (() => {
       let modal = document.createElement('div')
         , backdrop = document.createElement('div')
         , zIndexFactor;
@@ -110,8 +110,8 @@ class Modal extends React.Component {
       document.body.removeChild(modal)
       document.body.removeChild(backdrop)
 
-      return (type) => baseIndex[type] + (zIndexFactor * (BaseModal.manager.modals.length - 1));
-    }())
+      return (type) => baseIndex[type] + (zIndexFactor * (this.manager.modals.length - 1));
+    })();
   }
 
   handleEntering(...args) {
@@ -183,6 +183,7 @@ class Modal extends React.Component {
         ref={ref => {
           this.modal = (ref && ref.refs.modal);
           this.backdrop = (ref && ref.refs.backdrop);
+          this.manager = (ref && ref.props.manager);
         }}
         container={container}
         backdrop={props.backdrop}
