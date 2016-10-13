@@ -22,7 +22,7 @@ let baseIndex = {};
 let PREFIX = 'modal';
 
 let getZIndex;
-let modalManager;
+let modalManager = BaseModal.getDefaultProps().manager;
 
 let omit = (obj, keys) => Object.keys(obj).reduce((o, key) => {
   if (keys.indexOf(key) === -1) o[key] = obj[key]
@@ -184,8 +184,6 @@ class Modal extends React.Component {
         ref={ref => {
           this.modal = (ref && ref.refs.modal);
           this.backdrop = (ref && ref.refs.backdrop);
-          if (ref)
-            modalManager = ref.props.manager;
         }}
         container={container}
         backdrop={props.backdrop}
