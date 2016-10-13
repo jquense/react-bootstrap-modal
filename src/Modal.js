@@ -22,6 +22,7 @@ let baseIndex = {};
 let PREFIX = 'modal';
 
 let getZIndex;
+let modalManager;
 
 let omit = (obj, keys) => Object.keys(obj).reduce((o, key) => {
   if (keys.indexOf(key) === -1) o[key] = obj[key]
@@ -92,7 +93,7 @@ class Modal extends React.Component {
   }
 
   componentDidMount() {
-    getZIndex = (() => {
+    getZIndex = getZIndex || (function () {
       let modal = document.createElement('div')
         , backdrop = document.createElement('div')
         , zIndexFactor;
@@ -110,8 +111,8 @@ class Modal extends React.Component {
       document.body.removeChild(modal)
       document.body.removeChild(backdrop)
 
-      return (type) => baseIndex[type] + (zIndexFactor * (this.manager.modals.length - 1));
-    })();
+      return (type) => baseIndex[type] + (zIndexFactor * (modalManager.modals.length - 1));
+    }());
   }
 
   handleEntering(...args) {
@@ -183,7 +184,8 @@ class Modal extends React.Component {
         ref={ref => {
           this.modal = (ref && ref.refs.modal);
           this.backdrop = (ref && ref.refs.backdrop);
-          this.manager = (ref && ref.props.manager);
+          if (ref)
+            modalManager = ref.props.manager;
         }}
         container={container}
         backdrop={props.backdrop}
