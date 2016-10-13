@@ -68,7 +68,7 @@ class Modal extends React.Component {
     keyboard:           true,
     animate:            true,
     transition:         true,
-    container:          document.body,
+    container:          canUseDOM ? document.body : null,
     attentionClass: 'shake',
   }
 
