@@ -68,7 +68,7 @@ class Modal extends React.Component {
     keyboard:           true,
     animate:            true,
     transition:         true,
-    container:          document.body,
+    container:          typeof window != 'undefined' ? document.body : null,
     attentionClass: 'shake',
   }
 
