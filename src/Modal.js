@@ -22,12 +22,12 @@ let baseIndex = {};
 let PREFIX = 'modal';
 
 let getZIndex;
-let modalManager = BaseModal.getDefaultProps().manager;
 
 let omit = (obj, keys) => Object.keys(obj).reduce((o, key) => {
   if (keys.indexOf(key) === -1) o[key] = obj[key]
   return o;
 }, {});
+
 
 class Modal extends React.Component {
 
@@ -70,7 +70,11 @@ class Modal extends React.Component {
     animate:            true,
     transition:         true,
     container:          canUseDOM ? document.body : null,
-    attentionClass: 'shake',
+    attentionClass:     'shake',
+    manager: (BaseModal.getDefaultProps
+      ? BaseModal.getDefaultProps()
+      : BaseModal.defaultProps
+    ).manager
   }
 
   static childContextTypes = {
@@ -93,7 +97,7 @@ class Modal extends React.Component {
   }
 
   componentDidMount() {
-    getZIndex = getZIndex || (function () {
+    getZIndex = getZIndex || (() => {
       let modal = document.createElement('div')
         , backdrop = document.createElement('div')
         , zIndexFactor;
@@ -111,8 +115,8 @@ class Modal extends React.Component {
       document.body.removeChild(modal)
       document.body.removeChild(backdrop)
 
-      return (type) => baseIndex[type] + (zIndexFactor * (modalManager.modals.length - 1));
-    }());
+      return (type) => baseIndex[type] + (zIndexFactor * (this.props.manager.modals.length - 1));
+    })();
   }
 
   handleEntering(...args) {
@@ -145,6 +149,7 @@ class Modal extends React.Component {
 
     let { dialog, classes, backdrop } = this.state;
 
+    delete props.manager;
     let elementProps = omit(props, Object.keys(Modal.propTypes))
 
     let prefix = modalPrefix || Modal.getDefaultPrefix();
@@ -182,8 +187,8 @@ class Modal extends React.Component {
       <BaseModal
         keyboard={keyboard}
         ref={ref => {
-          this.modal = (ref && ref.refs.modal);
-          this.backdrop = (ref && ref.refs.backdrop);
+          this.modal = ref && ref.modal
+          this.backdrop = ref && ref.backdrop
         }}
         container={container}
         backdrop={props.backdrop}
