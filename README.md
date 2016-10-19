@@ -59,9 +59,17 @@ class ModalExample extends React.Component {
   }
 }
 
-React.render(<ModalExample />, document.body);
-
+ReactDOM.render(<ModalExample />, document.body);
 ```
+
+### Styles
+
+If you are already including Twitter Bootstrap styles (e.g. `bootstrap.min.css`), then include `/lib/styles/rbm-patch.css`.  
+If you want to use this module without Twitter Bootstrap, then include `/lib/styles/rbm-complete.css`.
+
+If you do not like the Bootstrap visual look and feel, you can adjust `variables.less` to suit your needs and transpile it to css yourself.
+
+## Components
 
 ### `Modal`
 
@@ -111,8 +119,3 @@ A dismiss button for the Parent Modal. `Dismiss` button will trigger its parent 
 
 BaseModal represents just the modal markup without any of the logic to render it to the `document.body`. It is generally not recommended that you work with this component directly. You can use it if you really want to render a Modal inline.
 
-## Styles
-
-You can use this module separate from Twitter Bootstrap by just including the `/lib/styles/rbm-complete.css` file, or if you are using bootstrap and don't want to re-include styles you can just use `/lib/styles/rbm-patch.css`.
-
-If you don't like the bootstrap visual look and feel, you can adjust `variables.less` to suit your needs.
