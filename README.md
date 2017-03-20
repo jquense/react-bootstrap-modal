@@ -18,6 +18,10 @@ __note__: React bootstrap modal is compatible with bootstrap __3.3.4+__ if you w
 var Modal = require('react-bootstrap-modal')
 
 class ModalExample extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { open: false }
+  }
 
   render(){
     let closeModal = () => this.setState({ open: false })
@@ -29,7 +33,7 @@ class ModalExample extends React.Component {
 
     return (
       <div>
-        <button type='button'>Launch modal</button>
+        <button type='button' onClick={() => this.setState({ open: true })}>Launch modal</button>
 
         <Modal
           show={this.state.open}
