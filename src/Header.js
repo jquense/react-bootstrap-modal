@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cn from 'classnames';
 
 import Dismiss from './Dismiss';
@@ -11,13 +12,13 @@ class ModalHeader extends React.Component {
     return 'modal'
   }
   static propTypes = {
-    closeButton: React.PropTypes.bool,
+    closeButton: PropTypes.bool,
     /**
      * A css class applied to the Component
      */
-    modalPrefix: React.PropTypes.string,
+    modalPrefix: PropTypes.string,
 
-    'aria-label': React.PropTypes.string,
+    'aria-label': PropTypes.string,
   }
 
   static defaultProps = {
@@ -26,7 +27,7 @@ class ModalHeader extends React.Component {
   }
 
   static contextTypes = {
-    onModalHide: React.PropTypes.func
+    onModalHide: PropTypes.func
   }
 
   render() {

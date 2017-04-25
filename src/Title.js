@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cn from 'classnames';
 
 class ModalTitle extends React.Component {
@@ -6,7 +7,7 @@ class ModalTitle extends React.Component {
     /**
      * A css class applied to the Component
      */
-    modalPrefix: React.PropTypes.string
+    modalPrefix: PropTypes.string
   }
 
   static getDefaultPrefix() {
