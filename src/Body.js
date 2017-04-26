@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cn from 'classnames';
 
 class ModalBody extends React.Component {
@@ -24,7 +25,7 @@ ModalBody.propTypes = {
   /**
    * A css class applied to the Component
    */
-  modalPrefix: React.PropTypes.string
+  modalPrefix: PropTypes.string
 };
 
 export default ModalBody

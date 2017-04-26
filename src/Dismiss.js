@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 let chain = (a, b) => (...args) => {
   a && a(...args)
@@ -8,9 +9,9 @@ let chain = (a, b) => (...args) => {
 class Dismiss extends React.Component {
 
   static propTypes = {
-    component:  React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.func
+    component:  PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.func
     ])
   }
 
@@ -19,7 +20,7 @@ class Dismiss extends React.Component {
   }
 
   static contextTypes = {
-    onModalHide: React.PropTypes.func
+    onModalHide: PropTypes.func
   }
 
   render() {

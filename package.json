@@ -32,8 +32,8 @@
     "defaultDryRun": "false"
   },
   "peerDependencies": {
-    "react": ">=0.14.0",
-    "react-dom": ">=0.14.0"
+    "react": "^0.14.9 || >= 15.3.0",
+    "react-dom": "^0.14.9 || >= 15.3.0"
   },
   "devDependencies": {
     "@monastic.panic/component-playground": "^2.0.0",
@@ -65,8 +65,8 @@
     "lolex": "^1.4.0",
     "mocha": "^2.4.5",
     "raw-loader": "^0.5.1",
-    "react": "^15.3.1",
-    "react-dom": "^15.3.1",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
     "release-script": "^1.0.2",
     "rimraf": "^2.4.3",
     "simulant": "^0.2.0",
@@ -80,6 +80,7 @@
   "dependencies": {
     "classnames": "^2.2.3",
     "dom-helpers": "^2.2.4",
+    "prop-types": "^15.5.8",
     "react-overlays": "^0.6.10",
     "react-prop-types": "^0.4.0"
   }

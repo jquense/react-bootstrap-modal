@@ -1,4 +1,5 @@
 import React  from 'react';
+import PropTypes from 'prop-types';
 import { findDOMNode } from 'react-dom';
 
 import BaseModal from 'react-overlays/lib/Modal';
@@ -36,32 +37,32 @@ class Modal extends React.Component {
   }
 
   static propTypes = {
-    show: React.PropTypes.bool,
+    show: PropTypes.bool,
 
     /** sizes **/
-    small: React.PropTypes.bool,
-    sm: React.PropTypes.bool,
-    large: React.PropTypes.bool,
-    lg: React.PropTypes.bool,
+    small: PropTypes.bool,
+    sm: PropTypes.bool,
+    large: PropTypes.bool,
+    lg: PropTypes.bool,
     /** --- **/
 
-    backdrop: React.PropTypes.oneOf(['static', true, false]),
-    keyboard: React.PropTypes.bool,
-    animate: React.PropTypes.bool,
-    transition: React.PropTypes.any,
-    container: React.PropTypes.oneOfType([componentOrElement, React.PropTypes.func]),
+    backdrop: PropTypes.oneOf(['static', true, false]),
+    keyboard: PropTypes.bool,
+    animate: PropTypes.bool,
+    transition: PropTypes.any,
+    container: PropTypes.oneOfType([componentOrElement, PropTypes.func]),
 
-    onHide: React.PropTypes.func,
-    onEnter: React.PropTypes.func,
-    onEntering: React.PropTypes.func,
-    onEntered: React.PropTypes.func,
-    onExit: React.PropTypes.func,
-    onExiting: React.PropTypes.func,
-    onExited: React.PropTypes.func,
+    onHide: PropTypes.func,
+    onEnter: PropTypes.func,
+    onEntering: PropTypes.func,
+    onEntered: PropTypes.func,
+    onExit: PropTypes.func,
+    onExiting: PropTypes.func,
+    onExited: PropTypes.func,
 
-    modalPrefix: React.PropTypes.string,
-    dialogClassName: React.PropTypes.string,
-    attentionClass: React.PropTypes.string,
+    modalPrefix: PropTypes.string,
+    dialogClassName: PropTypes.string,
+    attentionClass: PropTypes.string,
   }
 
   static defaultProps = {
@@ -78,7 +79,7 @@ class Modal extends React.Component {
   }
 
   static childContextTypes = {
-    onModalHide: React.PropTypes.func
+    onModalHide: PropTypes.func
   }
 
   getChildContext(){
