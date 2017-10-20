@@ -45,7 +45,7 @@ describe('Modal', () => {
   it('should trigger close on backdrop click', done => {
     inst = $(<Modal id='test' show onHide={()=> done()}/>).render();
 
-    $(inst[0].backdrop).trigger('click')
+    $(qsa('.modal-backdrop')[0]).trigger('click')
   })
 
   it('should not trigger close on static backdrop click', () => {
@@ -53,13 +53,13 @@ describe('Modal', () => {
 
     inst = $(<Modal backdrop='static' show onHide={err}/>).render();
 
-    $(inst[0].backdrop).trigger('click')
+    $(qsa('.modal-backdrop')[0]).trigger('click')
   })
 
   it('should trigger close on backdrop click', done => {
     inst = $(<Modal show onHide={()=> done() }/>).render();
 
-    $(inst[0].backdrop).trigger('click')
+    $(qsa('.modal-backdrop')[0]).trigger('click')
   })
 
   it('should trigger close on ESC', done => {
