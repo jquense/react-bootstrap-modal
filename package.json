@@ -80,8 +80,8 @@
   "dependencies": {
     "classnames": "^2.2.3",
     "dom-helpers": "^2.2.4",
-    "prop-types": "^15.5.8",
-    "react-overlays": "^0.6.10",
+    "prop-types": "^15.6.0",
+    "react-overlays": "^0.7.3",
     "react-prop-types": "^0.4.0"
   }
 }
