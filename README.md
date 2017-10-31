@@ -64,8 +64,8 @@ ReactDOM.render(<ModalExample />, document.body);
 
 ### Styles
 
-If you are already including Twitter Bootstrap styles (e.g. `bootstrap.min.css`), then include `/lib/styles/rbm-patch.css`.  
-If you want to use this module without Twitter Bootstrap, then include `/lib/styles/rbm-complete.css`.
+If you are already including Twitter Bootstrap styles (e.g. `bootstrap.min.css`), then include `/lib/css/rbm-patch.css`.
+If you want to use this module without Twitter Bootstrap, then include `/lib/css/rbm-complete.css`.
 
 If you do not like the Bootstrap visual look and feel, you can adjust `variables.less` to suit your needs and transpile it to css yourself.
 

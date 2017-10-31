@@ -17,13 +17,15 @@
     "dialog",
     "bootstrap"
   ],
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "test": "jest ",
     "tdd": "jest --watch",
     "clean": "rimraf lib/*",
-    "less": "lessc -x src/less/rbm-complete.less lib/styles/rbm-complete.css & lessc -x src/less/rbm-patch.less lib/styles/rbm-patch.css",
-    "copy": "cpy src/less/* lib/styles",
-    "build": "npm run clean && babel src --out-dir lib && npm run less & npm run copy",
+    "less": "lessc src/less/rbm-complete.less lib/css/rbm-complete.css && lessc src/less/rbm-patch.less lib/css/rbm-patch.css",
+    "build": "npm run clean && npm run less && babel src --out-dir lib --copy-files",
     "build:docs": "webpack --config ./webpack.config.js",
     "docs": "webpack-dev-server --config ./webpack.config.js",
     "release": "release"
