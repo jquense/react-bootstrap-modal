@@ -1,12 +1,9 @@
-var React = require('react/addons')
-  , Modal = require('../../src/Modal');
-
+import React from 'react'
+import Modal from '../../src/Modal'
 
 class NestedModal extends React.Component {
-  constructor(){
-    this.state = {
-      open: false
-    }
+  state = {
+    open: false
   }
 
   render(){
@@ -31,13 +28,10 @@ class NestedModal extends React.Component {
     )
   }
 }
-  
-module.exports = class Stackable extends React.Component {
 
-  constructor(){
-    this.state = {
-      open: false
-    }
+export default class Stackable extends React.Component {
+  state = {
+    open: false
   }
 
   render() {

@@ -60,4 +60,4 @@ class Stackable extends React.Component {
   }
 }
 
-ReactDOM.render(<Stackable/>, mountNode)
+render(<Stackable/>)

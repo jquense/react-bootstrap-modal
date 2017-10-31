@@ -1,3 +1,4 @@
+
 class Static extends React.Component {
 
   constructor(){
@@ -12,20 +13,20 @@ class Static extends React.Component {
 
     return (
       <div>
-        <Modal show={this.state.open} onHide={close} backdrop='static'>
+        <Modal
+          aria-labelledby='ModalTitle'
+          show={this.state.open}
+          onHide={close}
+        >
           <Modal.Header>
-            <Modal.Title>Static backdrop</Modal.Title>
+            <Modal.Title id='ModalTitle'>Labels the Modal</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Click on the backdrop to try and dismiss it</p>
+            <p>Lorum Bacon</p>
           </Modal.Body>
 
           <Modal.Footer>
-            <Modal.Dismiss
-              className='btn btn-default'
-            >
-              Close
-            </Modal.Dismiss>
+            <Modal.Dismiss className='btn btn-default'>Close</Modal.Dismiss>
           </Modal.Footer>
         </Modal>
 
@@ -40,4 +41,4 @@ class Static extends React.Component {
   }
 }
 
-ReactDOM.render(<Static/>, mountNode)
+render(<Static/>)

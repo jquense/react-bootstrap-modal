@@ -1,12 +1,15 @@
+import dom from 'dom-helpers';
+import Enzyme, { mount, shallow } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
-import { findDOMNode } from 'react-dom';
-var Modal = require('../src/Modal');
-var dom = require('dom-helpers')
-var simulant = require('simulant')
+import simulant from 'simulant';
+
+
+import Modal from '../src/Modal';
+Enzyme.configure({ adapter: new Adapter() })
 
 var qsa = document.querySelectorAll.bind(document)
 
-var $ = require('teaspoon');
 
 describe('Modal', () => {
   let inst;
@@ -18,12 +21,12 @@ describe('Modal', () => {
   })
 
   it('should render into the DOM', () => {
-    inst = $(<Modal id='test'/>).render();
+    inst = mount(<Modal id='test'/>);
 
     dom.contains(document.body, document.getElementById('test'))
       .should.equal(false)
 
-    $(<Modal id='test' show/>).render();
+    mount(<Modal id='test' show/>);
 
     dom.contains(document.body, document.getElementById('test'))
       .should.equal(true)
@@ -31,39 +34,39 @@ describe('Modal', () => {
 
 
   it('should render backdrop', () => {
-    inst = $(<Modal id='test' show/>).render();
+    inst = mount(<Modal id='test' show/>);
 
     qsa('.modal-backdrop').length.should.equal(1)
   })
 
   it('should leave out backdrop', () => {
-    inst = $(<Modal id='test' backdrop={false}/>).render();
+    inst = mount(<Modal id='test' backdrop={false}/>);
 
     qsa('.modal-backdrop').length.should.equal(0)
   })
 
   it('should trigger close on backdrop click', done => {
-    inst = $(<Modal id='test' show onHide={()=> done()}/>).render();
+    inst = mount(<Modal id='test' show onHide={()=> done()}/>);
 
-    $(inst[0].backdrop).trigger('click')
+    mount(inst[0].backdrop).trigger('click')
   })
 
   it('should not trigger close on static backdrop click', () => {
     let err = ()=> { throw new Error('should not trigger onHide')}
 
-    inst = $(<Modal backdrop='static' show onHide={err}/>).render();
+    inst = mount(<Modal backdrop='static' show onHide={err}/>);
 
-    $(inst[0].backdrop).trigger('click')
+    mount(inst[0].backdrop).trigger('click')
   })
 
   it('should trigger close on backdrop click', done => {
-    inst = $(<Modal show onHide={()=> done() }/>).render();
+    inst = mount(<Modal show onHide={()=> done() }/>);
 
-    $(inst[0].backdrop).trigger('click')
+    mount(inst[0].backdrop).trigger('click')
   })
 
   it('should trigger close on ESC', done => {
-    inst = $(<Modal show onHide={()=> done() }/>).render();
+    inst = mount(<Modal show onHide={()=> done() }/>);
 
     simulant.fire(qsa('.modal')[0], 'keyup', { keyCode: 27 })
   })
@@ -71,7 +74,7 @@ describe('Modal', () => {
   it('should not trigger close on ESC when keyboard is false', () => {
     let err = ()=> { throw new Error('should not trigger onHide')}
 
-    inst = $(<Modal show keyboard={false} onHide={err}/>).render();
+    inst = mount(<Modal show keyboard={false} onHide={err}/>);
 
     simulant.fire(qsa('.modal')[0], 'keyup', { keyCode: 27 })
   })
@@ -79,42 +82,42 @@ describe('Modal', () => {
   describe('Header', ()=> {
 
     it('should include a close button', () => {
-      inst = $(<Modal.Header closeButton>{'title'}</Modal.Header>).render()
+      inst = mount(<Modal.Header closeButton>{'title'}</Modal.Header>)
 
       inst.find('.close:dom').single()
     })
 
     it('should trigger onHide in parent', done => {
-      inst = $(
+      inst = mount(
         <Modal show backdrop='static' onHide={()=> done() }>
           <Modal.Header closeButton />
         </Modal>
-      ).render()
+      )
 
-      $(inst[0].dialog).find('.close').trigger('click')
+      mount(inst[0].dialog).find('.close').trigger('click')
     })
   })
 
   describe('Dismiss', ()=> {
 
     it('should trigger onHide in parent', done => {
-      inst = $(
+      inst = mount(
         <Modal show backdrop='static' onHide={()=> done() }>
           <div><Modal.Dismiss className='close-btn'/></div>
         </Modal>
-      ).render()
+      )
 
-      $(inst[0].dialog).find('.close-btn').trigger('click')
+      mount(inst[0].dialog).find('.close-btn').trigger('click')
     })
 
     it('should use the `component` prop', () => {
       let Button = ()=> <a>{'hi'}</a>
 
-      inst = $(<Modal.Dismiss component='span'/>).shallowRender();
+      inst = shallow(<Modal.Dismiss component='span'/>);
 
       inst.children()[0].type.should.equal('span')
 
-      inst = $(<Modal.Dismiss component={Button}/>).shallowRender();
+      inst = shallow(<Modal.Dismiss component={Button}/>);
 
       inst.children()[0].type.should.equal(Button)
     })

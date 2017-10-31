@@ -1,10 +1,9 @@
-import React  from 'react';
 import PropTypes from 'prop-types';
+import React  from 'react';
+import componentOrElement from 'prop-types-extra/lib/componentOrElement';
 import { findDOMNode } from 'react-dom';
-
 import BaseModal from 'react-overlays/lib/Modal';
 import isOverflowing from 'react-overlays/lib/utils/isOverflowing';
-import componentOrElement from 'react-prop-types/lib/componentOrElement';
 
 import Fade from './Fade';
 import Body   from './Body';

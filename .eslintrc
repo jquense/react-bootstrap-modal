@@ -1,3 +1,14 @@
 
 parser: babel-eslint
-extends: jason
+extends: jason/react
+overrides:
+  - files:
+     - examples/*
+    globals:
+      React: false
+      ReactDOM: false
+  - files:
+     - test/*
+    env:
+      jest: true
+
