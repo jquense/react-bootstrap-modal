@@ -167,7 +167,7 @@ class Modal extends React.Component {
       >
         <div
           key='modal'
-          ref='inner'
+          ref={r => this.innerRef = r }
           className={cn(
               prefix + '-dialog'
             , dialogClassName
@@ -219,7 +219,7 @@ class Modal extends React.Component {
       this.setState({ classes: '' }, ()=> {
         if (this.props.show) {
            // eslint-disable-next-line no-unused-expressions
-          this.refs.inner.offsetWidth
+          this.innerRef.offsetWidth
           this.setState({
             classes: attentionClass + ' animated',
           })
