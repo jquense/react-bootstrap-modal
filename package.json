@@ -27,6 +27,7 @@
     "less": "lessc src/less/rbm-complete.less lib/css/rbm-complete.css && lessc src/less/rbm-patch.less lib/css/rbm-patch.css",
     "build": "npm run clean && npm run less && babel src --out-dir lib --copy-files",
     "build:docs": "webpack --config ./webpack.config.js",
+    "prepublishOnly": "npm run build",
     "docs": "webpack-dev-server --config ./webpack.config.js"
   },
   "jest": {
