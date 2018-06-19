@@ -27,11 +27,7 @@
     "less": "lessc src/less/rbm-complete.less lib/css/rbm-complete.css && lessc src/less/rbm-patch.less lib/css/rbm-patch.css",
     "build": "npm run clean && npm run less && babel src --out-dir lib --copy-files",
     "build:docs": "webpack --config ./webpack.config.js",
-    "docs": "webpack-dev-server --config ./webpack.config.js",
-    "release": "release"
-  },
-  "release-script": {
-    "defaultDryRun": "false"
+    "docs": "webpack-dev-server --config ./webpack.config.js"
   },
   "jest": {
     "roots": [
@@ -42,40 +38,45 @@
     "react": "^0.14.9 || >= 15.3.0",
     "react-dom": "^0.14.9 || >= 15.3.0"
   },
+  "release": {
+    "extends": "@4c/semantic-release-config"
+  },
   "devDependencies": {
+    "@4c/semantic-release-config": "^1.0.2",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
-    "babel-jest": "^21.2.0",
+    "babel-jest": "^23.0.1",
     "babel-preset-jason": "^3.1.1",
     "bootstrap": "^3.3.7",
     "chai": "^4.1.2",
     "cpy-cli": "^1.0.0",
-    "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.1",
-    "eslint": "^4.8.0",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "eslint": "^4.19.1",
     "eslint-config-jason": "^4.0.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-react": "^7.4.0",
-    "jest": "^21.2.1",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-react": "^7.9.1",
+    "jest": "^23.1.0",
     "less": "^2.0.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-live": "^1.7.1",
-    "react-test-renderer": "^16.0.0",
-    "release-script": "^1.0.2",
+    "react-test-renderer": "^16.4.1",
     "rimraf": "^2.6.2",
+    "semantic-release": "^15.5.5",
     "simulant": "^0.2.0",
-    "sinon": "^4.0.1",
-    "sinon-chai": "^2.14.0",
+    "sinon": "^6.0.0",
+    "sinon-chai": "^3.2.0",
+    "travis-deploy-once": "^5.0.0",
     "webpack": "^3.7.1",
     "webpack-atoms": "^4.1.2",
     "webpack-dev-server": "^2.9.1"
   },
   "dependencies": {
-    "classnames": "^2.2.3",
-    "dom-helpers": "^3.2.1",
-    "prop-types": "^15.5.8",
-    "prop-types-extra": "^1.0.1",
+    "classnames": "^2.2.6",
+    "dom-helpers": "^3.3.1",
+    "prop-types": "^15.6.1",
+    "prop-types-extra": "^1.1.0",
     "react-overlays": "^0.7.3"
   }
 }

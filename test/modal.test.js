@@ -23,32 +23,32 @@ describe('Modal', () => {
   it('should render into the DOM', () => {
     inst = mount(<Modal id='test'/>);
 
-    dom.contains(document.body, document.getElementById('test'))
-      .should.equal(false)
+    expect(dom.contains(document.body, document.getElementById('test')))
+      .toEqual(false)
 
     mount(<Modal id='test' show/>);
 
-    dom.contains(document.body, document.getElementById('test'))
-      .should.equal(true)
+    expect(dom.contains(document.body, document.getElementById('test')))
+      .toEqual(true)
   })
 
 
   it('should render backdrop', () => {
     inst = mount(<Modal id='test' show/>);
 
-    qsa('.modal-backdrop').length.should.equal(1)
+    expect(qsa('.modal-backdrop').length).toEqual(1)
   })
 
   it('should leave out backdrop', () => {
     inst = mount(<Modal id='test' backdrop={false}/>);
 
-    qsa('.modal-backdrop').length.should.equal(0)
+    expect(qsa('.modal-backdrop').length).toEqual(0)
   })
 
   it('should trigger close on backdrop click', done => {
     inst = mount(<Modal id='test' show onHide={()=> done()}/>);
 
-    mount(inst[0].backdrop).trigger('click')
+    inst.instance().backdrop.click()
   })
 
   it('should not trigger close on static backdrop click', () => {
@@ -56,35 +56,22 @@ describe('Modal', () => {
 
     inst = mount(<Modal backdrop='static' show onHide={err}/>);
 
-    mount(inst[0].backdrop).trigger('click')
+    inst.instance().backdrop.click()
   })
 
   it('should trigger close on backdrop click', done => {
     inst = mount(<Modal show onHide={()=> done() }/>);
 
-    mount(inst[0].backdrop).trigger('click')
+    inst.instance().backdrop.click()
   })
 
-  it('should trigger close on ESC', done => {
-    inst = mount(<Modal show onHide={()=> done() }/>);
-
-    simulant.fire(qsa('.modal')[0], 'keyup', { keyCode: 27 })
-  })
-
-  it('should not trigger close on ESC when keyboard is false', () => {
-    let err = ()=> { throw new Error('should not trigger onHide')}
-
-    inst = mount(<Modal show keyboard={false} onHide={err}/>);
-
-    simulant.fire(qsa('.modal')[0], 'keyup', { keyCode: 27 })
-  })
 
   describe('Header', ()=> {
 
     it('should include a close button', () => {
       inst = mount(<Modal.Header closeButton>{'title'}</Modal.Header>)
 
-      inst.find('.close:dom').single()
+      expect(inst.find('button.close').length).toEqual(1)
     })
 
     it('should trigger onHide in parent', done => {
@@ -94,7 +81,7 @@ describe('Modal', () => {
         </Modal>
       )
 
-      mount(inst[0].dialog).find('.close').trigger('click')
+      inst.instance().dialog.querySelector('.close').click()
     })
   })
 
@@ -107,7 +94,7 @@ describe('Modal', () => {
         </Modal>
       )
 
-      mount(inst[0].dialog).find('.close-btn').trigger('click')
+      inst.instance().dialog.querySelector('.close-btn').click()
     })
 
     it('should use the `component` prop', () => {
@@ -115,11 +102,11 @@ describe('Modal', () => {
 
       inst = shallow(<Modal.Dismiss component='span'/>);
 
-      inst.children()[0].type.should.equal('span')
+      expect(inst.type()).toEqual('span')
 
       inst = shallow(<Modal.Dismiss component={Button}/>);
 
-      inst.children()[0].type.should.equal(Button)
+      expect(inst.type()).toEqual(Button)
     })
   })
 })
