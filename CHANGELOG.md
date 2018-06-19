@@ -1,3 +1,10 @@
+## [4.1.1](https://github.com/jquense/react-bootstrap-modal/compare/v4.1.0...v4.1.1) (2018-06-19)
+
+
+### Bug Fixes
+
+* make sure package is built ([9254093](https://github.com/jquense/react-bootstrap-modal/commit/9254093)), closes [#59](https://github.com/jquense/react-bootstrap-modal/issues/59)
+
 # [4.1.0](https://github.com/jquense/react-bootstrap-modal/compare/v4.0.0...v4.1.0) (2018-06-19)
 
 
