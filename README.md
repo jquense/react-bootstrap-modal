@@ -82,7 +82,7 @@ The main Modal Component.
 - `keyboard`: `Boolean(default true)` Modal is dismissible via the `esc` key
 
 - `transition` `Boolean(default true)` Fade the entry and exit of the modal. You can also provide a
-Transition component from the `react-overlays` library to customize the animation more minutely.
+Transition component from the `react-transition-group` v2 library to customize the animation more minutely.
 - `attentionClass`: `String(default 'shake')` - an animation class added to the modal when a "static" backdrop is clicked, set to nothing if
 no animation is desired
 - `container`: `Node(default document.body)`, a DOM Node to append the modal too
