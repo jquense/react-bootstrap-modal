@@ -28,6 +28,12 @@ let omit = (obj, keys) => Object.keys(obj).reduce((o, key) => {
   return o;
 }, {});
 
+function DialogTransition(props) {
+  return <Fade {...props} timeout={Modal.TRANSITION_DURATION} />;
+}
+function BackdropTransition(props) {
+  return <Fade {...props} timeout={Modal.BACKDROP_TRANSITION_DURATION} />;
+}
 
 class Modal extends React.Component {
 
@@ -155,7 +161,7 @@ class Modal extends React.Component {
     let prefix = modalPrefix || Modal.getDefaultPrefix();
 
     if (transition === true)
-      transition = Fade;
+      transition = DialogTransition;
 
     let modal = (
       <div
@@ -193,6 +199,11 @@ class Modal extends React.Component {
         container={container}
         backdrop={props.backdrop}
         show={props.show}
+        backdropStyle={backdrop}
+        backdropClassName={prefix + '-backdrop'}
+        containerClassName={prefix + '-open'}
+        transition={transition || undefined}
+        backdropTransition={transition ? BackdropTransition : undefined}
         onHide={this.props.onHide}
         onEnter={onEnter}
         onEntering={this.handleEntering}
@@ -200,12 +211,6 @@ class Modal extends React.Component {
         onExit={onExit}
         onExiting={this.handleExiting}
         onExited={onExited}
-        backdropStyle={backdrop}
-        backdropClassName={prefix + '-backdrop'}
-        containerClassName={prefix + '-open'}
-        transition={transition}
-        dialogTransitionTimeout={Modal.TRANSITION_DURATION}
-        backdropTransitionTimeout={Modal.BACKDROP_TRANSITION_DURATION}
       >
         {modal}
       </BaseModal>
