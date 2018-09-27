@@ -260,7 +260,8 @@ class Modal extends React.Component {
       dialog: {
         zIndex: getZIndex('modal'),
         paddingRight: bodyIsOverflowing && !modalIsOverflowing ? scrollbarWidth() : void 0,
-        paddingLeft:  !bodyIsOverflowing && modalIsOverflowing ? scrollbarWidth() : void 0
+        paddingLeft:  !bodyIsOverflowing && modalIsOverflowing ? scrollbarWidth() : void 0,
+        display: 'block'
       },
       backdrop: {
         zIndex: getZIndex('backdrop')
